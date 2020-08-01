@@ -8,4 +8,3 @@ Here you find the JavaScript counterparts. The site has seven parts each having 
 
 [Part 1 Introduction](./p1B.html)
 
-[Part 6 Physics Based Rendering](./p6B.html)
