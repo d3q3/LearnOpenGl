@@ -1,7 +1,7 @@
 import { vs_camera, fs_camera } from "../../js/Ch10/shaders/index.js";
 import { vec3, mat4 } from "../../../math/glmatrix/index.js";
-import { Shader } from "../../js/common/shader.js";
-import { Camera, CameraMovement } from "../../js/common/camera.js";
+import { Shader } from "../../js/common/Shader.js";
+import { Camera, CameraMovement } from "../../js/common/Camera.js";
 import { KeyInput } from "../../js/common/KeyInput.js";
 import { Mouse } from "../../js/common/Mouse.js";
 const sizeFloat = 4;
