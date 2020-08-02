@@ -5,6 +5,6 @@ A good book on OpenGL together with tutorials can be found at [LearnOpenGl](http
 
 The source can of course be downloaded from this site. 
 
-The result of the programs in the browser can be found [at this github site](http://d3q.github.io/LearnOpenGl). Of course your browser must support WebGl2. This is done by Google Chrome and by the latest versions of Microsoft Edge.
+The result of the programs in the browser can be found [at this github site](http://d3q3.github.io/LearnOpenGl). Of course your browser must support WebGl2. This is done by Google Chrome and by the latest versions of Microsoft Edge.
 
 For the documentation of the process of creating these files see [drikus.net](http://www.drikus.net/ict/openGL/Learn/introduction.html). 
