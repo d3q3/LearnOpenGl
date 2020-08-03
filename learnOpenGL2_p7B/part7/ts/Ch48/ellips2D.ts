@@ -4,7 +4,7 @@ import { Shader } from "../../js/common/Shader.js";
 import { Camera, CameraMovement } from "../../js/common/Camera.js";
 import { KeyInput } from "../../js/common/KeyInput.js";
 import { Mouse } from "../../js/common/Mouse.js";
-import { Ellipse } from "../../js/geometry/curves2d.js";
+import { Ellipse } from "../../js/geometry/Curves2d.js";
 import { Earcut } from "../../js/geometry/Earcut.js";
 //import { Font } from "../../js/extras/core/Font.js"
 

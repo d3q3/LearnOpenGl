@@ -4,7 +4,7 @@ import { Shader } from "../../js/common/Shader.js";
 import { Camera, CameraMovement } from "../../js/common/Camera.js";
 import { KeyInput } from "../../js/common/KeyInput.js";
 import { Mouse } from "../../js/common/Mouse.js";
-import { Ellipse } from "../../js/geometry/curves2d.js";
+import { Ellipse } from "../../js/geometry/Curves2d.js";
 import { Earcut } from "../../js/geometry/Earcut.js";
 const sizeFloat = 4;
 const GLFW_KEY_W = 'w', GLFW_KEY_S = 's', GLFW_KEY_A = 'a', GLFW_KEY_D = 'd', GLFW_KEY_SPACE = ' ';
