@@ -1,0 +1,126 @@
+% !TEX TS-program = pdflatexmk
+% Template file for TeXShop by Michael Sharpe, LPPL
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry} 
+\usepackage[parfill]{parskip}% Begin paragraphs with an empty line rather than an indent
+\usepackage{graphicx}
+\pdfmapfile{=baskervillef.map}
+\usepackage{trace}
+%SetFonts
+% baskervillef+newtxmath
+\usepackage[p,osf,sups]{baskervillef} % use proportional osf
+\usepackage[LY1]{fontenc}
+\usepackage{textcomp}
+\usepackage[varqu,varl]{zi4}% inconsolata
+\usepackage{amsmath,amsthm}
+\usepackage[baskerville,vvarbb]{newtxmath}
+% option vvarbb gives you stix blackboard bold
+\useosf % use oldstyle figures except in math
+\usepackage[cal=boondoxo]{mathalfa}% less slanted than STIX cal
+\usepackage{bm}
+%SetFonts
+\usepackage{url}\usepackage{fonttable}
+\title{The BaskervilleF Font Package}
+\author{Michael Sharpe}
+\date{\today}  % Activate to display a given date or no date
+
+\begin{document}
+\maketitle
+John Baskerville (1706--1775), the most original and influential figure in English typographic history, steered the direction of type innovation away from the ``oldstyle'' prevalent during the early to mid eighteenth century toward the ``modern'' style of the later part of that century, and for that reason, his font  is classified as ``transitional''. His work was not accepted happily in England. His competitors suggested that his sharp serifs and high contrast could damage the eyes.\footnote{I take no responsibility for blindness that may  be laid to BaskervilleF. Caveat emptor!} Benjamin Franklin and a number of European type designers took his work very seriously and championed his designs. Despite being appointed printer to Cambridge University, he was not commercially successful, though responsible for a number of works of the highest quality, depending on the highest quality equipment, paper and inks. A punchcutter named Isaac Moore, and employee of a print foundry owned by Joseph Fry, created in 1766 a derivative of \emph{Baskerville} that worked on lower quality equipment that was widely available, and this has become the modern standard for several 
+Baskerville revivals. (Storm Baskerville, a very expensive commercial font, seems to be the most authentic of modern Baskerville revivals.) According to \emph{An Atlas of Typeforms} (Sutton and Bartram, 1966) Fry's Baskerville has more in common with later fonts such as Bell, Bulmer and Scotch Roman.  In 1923, Morris Fuller Benton designed for American Type Foundry (ATF) a revival of Fry's Baskerville with a new Italic to replace the original poorly thought-of version in Fry's Baskerville. This version appears in several of their catalogs, and the 1941 catalog has been scanned at high resolution and made available by \textsc{tug}, at \url{http://tug.org/~rlevien/scan/}, in the file {\tt info5}.
+
+The F at the end of BaskervilleF is supposed to suggest both ``Free'' and ``Fry's''. It is  a reworking of \emph{LibreBaskerville}, which I would guess to be the result (at least in Regular and Italic) of  tracings of the high resolution scans of ATF Baskerville (American Type Foundry, 1941), and on the other, an attempt to provide a version of Baskerville more like the traditional version used for print rather than a web font. 
+
+BaskervilleF provides {\tt Roman}, {\tt Bold}, {\tt Italic} and {\tt BoldItalic}. The Regular, Italic and Bold glyphs were derived from the corresponding LibreBaskerville glyphs, mostly hollowing out the interiors to increase the contrast (ratio of thickest to thinnest stroke widths) while keeping to the extent possible the side bearings, so that the good kerning tables in {\tt Roman}, {\tt Bold} and {\tt Italic} would not require too much reworking. As of version 1.044, the kerning ables have been extended to cover, at least in regular style, kerning pairs of the form {\tt*(} and {\tt)*}, in order to allow parentheses to be inserted in words without (un)forseen spacing side effects. 
+
+\textsc{Package Features:}\\
+In addition to the encodings {\tt OT1}, {\tt T1}, {\tt TS1}, {\tt LY1} in general use by Western European (and some Eastern European) scripts,  All allow a choice from four figure styles---{\tt TLF} (tabular lining figures, monospaced and uppercase), {\tt LF} (proportional lining figures, uppercase), {\tt TOsF} (tabular oldstyle figures, monospaced and lowercase) and {\tt OsF} (proportional oldstyle figures, lowercase).  \textsc{Small Caps} are offered in all styles, along with additional figure styles---superiors and denominators. These features are available from either \verb|fontspec| or from [pdf]\LaTeX. In \LaTeX, you access these through the macros \verb|\textsu| and  \verb|\textde|, or through their font-switching equivalents \verb|\sufigures| and  \verb|\defigures|. For example:
+\begin{itemize}
+\item
+\verb|M\textsu{lle} Dupont| and \verb|M{\sufigures lle} Dupont| both produce M\textsu{lle} Dupont.
+\item  \verb|{\defigures 12345}| and \verb|\textde{12345}| render as \textde{12345}, aligned with the baseline.
+\end{itemize}
+The usual f-ligatures (ff, fi, ffi, fl, ffl) are provided in the encodings OT1, T1 and LY1, but LY1 also contains the less common f-ligatures fj, ffj, fb, fh, and fk. These are all activated by default. The fonts contain other ligatures that are not available via {\tt pdflatex}, but are through Unicode TeX---e.g., XeLaTeX---by switching on discretionary ligatures. To load BaskervilleF as the main text font, you need only write:
+\begin{verbatim}
+\usepackage{fontspec}
+\defaultfontfeatures[\rmfamily,\sffamily]{Ligatures=TeX}\setmainfont{baskervillef}
+\end{verbatim}
+You could add the feature {\tt Ligatures=Rare} to turn on all available ligatures for the entire document.
+
+\textsc{Package Options and Macros:}\\
+The package defines two macros, \verb|\useosf| and \verb|\useproportional|, useable only in the preamble, which determine the default figure style in text. A typical invocation would be something like
+\begin{verbatim}
+\usepackage{baskervillef} % default figure style is tabular, lining
+% load sans and typewriter fonts
+% load a math font---it will use tabular lining figures in math
+\useosf % use oldstyle figures throughout, not lining figures
+\useproportional % use proportional figures throughout, not tabular proportional
+\end{verbatim}
+There is a simpler way to achieve essentially the same result, but with the advantage that the figure styles are not loaded until after the math package (if any) is loaded, so that math always uses the default tabular lining figures. 
+\begin{verbatim}
+% If you use babel, load it here, before baskervillef
+\usepackage[p,osf]{baskervillef} % default figure style is proportional, oldstyle
+% load sans and typewriter fonts
+% load a math font---it will use tabular lining figures in math
+\end{verbatim}
+
+No matter what the default figure style in text, the package provides switches and macros to use any available figure style.
+\begin{itemize}
+\item
+\verb|\textlf{}| and \verb|{\lfstyle }| give proportional lining figures;
+\verb|\texttlf{}| and \verb|{\tlfstyle }| give tabular lining figures;
+\verb|\textosf{}| and \verb|{\osfstyle }| give proportional oldstyle figures;
+\verb|\texttosf{}| and \verb|{\tosfstyle }| give tabular oldstyle figures;
+\verb|\textfrac[1]{3}{4}| uses superior and denominator figures to make the fraction \textfrac[1]{3}{4}. The macro used to add proper kerning to the fractions requires etex and will not work at all on, for example, a mobile phone or tablet based \TeX. Other examples: \verb|\textfrac[3]{7}{8}| (\textfrac[3]{7}{8}), \verb|\textfrac{54}{71}| (\textfrac{54}{71}).
+\end{itemize}
+The options that can be passed to {\tt baskervillef.sty} are the following:
+\begin{itemize}
+\item {\tt scale} or {\tt scaled}: a magnification factor---e.g., {\tt scaled=1.02} enlarges all text controlled by the package by {\tt2}\%;
+\item
+{\tt p}, or {\tt proportional}: make proportional figures the default rather than tabular;
+{\tt lf}, or {\tt lining}: make lining figures the default (this is already the default);
+{\tt osf}, or {\tt oldstyle}: make oldstyle figures the default rather than lining;
+\item {\tt spacing}, {\tt stretch} and {\tt shrink} allow you to modify the default  settings controlling work spacing, their default values being {\tt.26em}, {\tt.13em} and {\tt.08em};
+\item {\tt sups}: use superior figures to make footnote markers, rather than the \LaTeX's default markers;
+\item {\tt swash}: use BaskervilleF's swash glyphs---in T1 encoding, this gives you one extra ligature, \verb|f_b|;
+\item {\tt scosf}: always use oldstyle figures within a small caps block;
+\item {\tt theoremfont}: for theorem statements in the {\tt plain} style, use a doctored version of italics that has lining figures, plus upright versions of braces, brackets, parentheses, exclamation marks, question marks, colon and semicolon. To use these outside a covered theorem environment, use \verb|\textsl{}| or \verb|{\slshape }|, like: \verb|{\slshape Here is italic with upright colon and question mark:?;}|
+to get {\slshape Here is italic with upright colon and question mark:?;}
+\end{itemize}
+
+\section*{Mathematical accompaniment}
+The package contains fonts for use as math letters that are derived from BaskervilleF Roman  glyphs and the newtxmath family. Note that $v$ and $\nu$ (Greek {\tt nu}) are quite distinct. Here's a sample.
+
+\begin{verbatim}
+% preamble should include, in this order:
+\usepackage[T1]{fontenc}
+\usepackage[p,osf]{baskervillef}
+\usepackage[varqu,varl,var0]{inconsolata}
+\usepackage[scale=.95,type1]{cabin}
+\usepackage[baskerville,vvarbb]{newtxmath}
+\usepackage[cal=boondoxo]{mathalfa}
+\end{verbatim}
+\def\Pr{\ensuremath{\mathbb{P}}}
+\def\d{\mathrm{d}}
+%\thispagestyle{empty}
+The typeset math below follows the ISO recommendations that only variables
+be set in italic. Note the use of upright shapes for $\d$, $\mathrm{e}$
+and $\uppi$. (The first two are entered as \verb|\mathrm{d}| and
+\verb|\mathrm{e}|, and in fonts derived from {\tt mtpro2} or {\tt newtxmath},
+ the latter is entered as \verb|\uppi|.)
+
+\textbf{Simplest form of the \textit{Central Limit Theorem}:} \textit{Let
+$X_1$, $X_2,\cdots$ be a sequence of iid random variables with mean~$0$ 
+and variance $1$ on a probability space $(\Omega,\mathcal{F},\Pr)$. Then}
+\[\Pr\left(\frac{X_1+\cdots+X_n}{\sqrt{n}}\le v\right)\to\mathfrak{N}(v)\coloneq
+\int_{-\infty}^v \frac{\mathrm{e}^{-t^2/2}}{\sqrt{2\uppi}}\,
+\mathrm{d}t\quad\mbox{as $n\to\infty$,}\]
+\textit{or, equivalently, letting} $S_n\coloneq\sum_1^n X_k$,
+\[\mathbb{E} f\left(S_n/\sqrt{n}\right)\to \int_{-\infty}^\infty f(t)
+\frac{\mathrm{e}^{-t^2/2}}{\sqrt{2\uppi}}\,\mathrm{d}t
+\quad\mbox{as $n\to\infty$, for every $f\in\mathrm{b}
+\mathcal{C}(\mathbb{R})$.}\]
+
+%\textfrac{3}{4} \textfrac{7}{8} \textfrac{1}{7} \textfrac{2}{3} \textfrac{4}{5} \textfrac{5}{6} \textfrac{6}{9} \textfrac{8}{1} \textfrac{9}{2} \textfrac{0}{6}
+
+\end{document}  

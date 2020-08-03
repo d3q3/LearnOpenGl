@@ -1,0 +1,81 @@
+The BaskervilleF Font Package
+--------------------------
+
+BaskervilleF is a fork from the Libre Baskerville fonts (Roman, Italic, Bold only) released under the OFL by Pablo Impallari and Rodrigo Fuenzalida. Their fonts are optimized for web usage, while BaskervilleF is optimized for traditional TeX usage, normally destined for production of pdf files. A bold italic style was added and mathematical support is offered as an option to newtxmath.
+
+The fonts are provided in OpenType and PostScript formats. As with LibreBaskerville, they are released under SIL's OFL, details of which are spelled out in the file OFL.txt accompanying the package.
+
+The TeX font metrics, font definition files and other support files for BaskervilleF,
+i.e., the other files in the archive baskervillef.zip, may be distributed and/or modified
+under the conditions of the LaTeX Project Public License, either version 1.3 of
+this license or (at your option) any later version.  The latest version of this
+license is in http://www.latex-project.org/lppl.txt and version 1.3 or later is
+part of all distributions of LaTeX version 2003/12/01 or later. Those files and
+LaTeX support file baskervillef.sty are
+
+  Copyright (c) 2016---2020 Michael Sharpe
+
+Files provided "as is", with no warranties.
+
+The support files are provided in encodings OT1, T1, TS1 and LY1 for users of Western scripts.
+
+Current version: 1.049 2020-01-31
+
+Changes in version 1.049
+Modified baskervillef.sty to comply with changes to latex with respect to mweights and fontaxes packages.
+
+Changes in version 1.048
+Corrected errors in some of the OT1 fd files. (Thanks Frank Mittelbach.)
+
+Changes in version 1.047
+Corrected some spacing errors involving ligatures, the most egregious involving italic f_f_i.
+
+Changes in version 1.046
+Corrected some bad accented letters and accented small caps in BoldItalic. (Thanks to Ricardo Berlasso.)
+
+Changes in version 1.045
+Corrected a number of repeated lines in BaskervilleF.map.
+
+Changes in version 1.044
+1. Extended kerning table (regular only) to handle parentheses embedded in works, like (un)forseen.
+2. Corrected the spacing of math comma and period under option baskervillef to newtxmath.
+
+Changes in version 1.043
+Modified the sty file so that BaskervilleF text figure styles are selected always in the \AtEndPreamble hook. (Formerly, using babel would prevent this.)
+
+Changes in version 1.042
+Added a Q_u ligature to the otf files, accessed through the hlig table.
+
+Changes in version 1.041
+Added two entries to smcp table so that dotlessi and dotlessj map to correct small cap glyph.
+
+Changes in version 1.04
+1. Changes to sty file, reworking \textfrac.
+2. Changes to f-ligatures. Both f_j and f_f_j are now available in LY1 encoding.
+3. Brought documentation up to date.
+
+Changes in version 1.032
+Small changes to the kerning tables.
+
+Changes in version 1.031
+Corrected settings in the OS/2 tables for BaskervilleF-BoldItalic.otf. (Thanks again Joost Ziff.)
+
+Changes in version 1.03
+Corrected an entry in the lnum tables that erroneously pointed six.oldstyle to five.prop. (Thanks Joost Ziff.)
+
+Changes in version 1.02
+1. Additional glyphs, mainly for symbols that, under LaTeX, will end up in the textcomp family. 
+2. New macro replacing the \textcircled macro from textcomp.sty, and which works as expected---that is, \textcircled{S} draws a reduced small-cap S centered in a circle.
+
+Changes in version 1.01
+1. Several corrections of flaws in glyphs.
+2. Cotrrection to some accented glyphs and to the accents themselves to they work better as math accents.
+
+Changes in version 1.00a
+1. File omlzbami was omitted inadvertently from version 1.00. Now included.
+2. A couple of minor fixes in math metrics.
+
+Please send comments and bug reports or suggestions for improvement to
+
+msharpe at ucsd dot edu
+
