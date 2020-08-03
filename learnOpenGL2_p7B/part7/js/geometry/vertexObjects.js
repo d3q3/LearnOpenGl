@@ -220,4 +220,4 @@ export class Sphere2 extends VertexObject {
         ];
     }
 }
-//# sourceMappingURL=vertexObjects.js.map
+//# sourceMappingURL=VertexObjects.js.map

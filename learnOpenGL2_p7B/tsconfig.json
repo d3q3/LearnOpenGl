@@ -70,19 +70,21 @@
     // "./part7/ts/common/Mouse.ts",
     // "./part7/ts/common/Shader.ts",
 
-    //"./part7/ts/geometry/vertexObjects.ts",
-    //"./part7/ts/geometry/gltfModel.ts",
-    //"./part7/ts/geometry/gltfLoader.ts",
-    //"./part7/ts/geometry/curves2d.ts",
-    //"./part7/ts/geometry/Glyph.ts",
+   // "./part7/ts/geometry/VertexObjects.ts",
+
+   // "./part7/ts/geometry/GltfModel.ts",
+   // "./part7/ts/geometry/GltfLoader.ts",
+
+   // "./part7/ts/geometry/Curves2d.ts",
+     "./part7/ts/geometry/Glyph.ts",
 
     //chapter files:
-    "part7/ts/Ch48/html_css1.ts",
-    "part7/ts/Ch48/html_css2.ts",
-    "part7/ts/Ch48/canvas_2d.ts",
-    "part7/ts/Ch48/text2d_on_cube.ts",
-    "part7/ts/Ch48/ellips2D.ts",
-    "part7/ts/Ch48/font3D.ts",
+    // "part7/ts/Ch48/html_css1.ts",
+    // "part7/ts/Ch48/html_css2.ts",
+    // "part7/ts/Ch48/canvas_2d.ts",
+    // "part7/ts/Ch48/text2d_on_cube.ts",
+    // "part7/ts/Ch48/ellips2D.ts",
+    // "part7/ts/Ch48/font3D.ts",
 
   ]
 }

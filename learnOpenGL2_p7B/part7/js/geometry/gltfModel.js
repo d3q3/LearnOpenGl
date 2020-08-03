@@ -98,4 +98,4 @@ export class GltfAccessor extends Accessor {
         this.count = acs.count;
     }
 }
-//# sourceMappingURL=gltfModel.js.map
+//# sourceMappingURL=GltfModel.js.map

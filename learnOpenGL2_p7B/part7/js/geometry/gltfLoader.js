@@ -137,4 +137,4 @@ function loadArrayBuffer(url, bid, callback) {
     };
     xobj.send(null);
 }
-//# sourceMappingURL=gltfLoader.js.map
+//# sourceMappingURL=GltfLoader.js.map

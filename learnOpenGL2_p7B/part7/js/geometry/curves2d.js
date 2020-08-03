@@ -211,4 +211,4 @@ export class QuadraticBezier extends Curve2d {
     }
     ;
 }
-//# sourceMappingURL=curves2d.js.map
+//# sourceMappingURL=Curves2d.js.map
