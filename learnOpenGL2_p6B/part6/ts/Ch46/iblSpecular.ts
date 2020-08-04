@@ -11,7 +11,7 @@ import { Shader } from '../../js/common/Shader.js'
 import { Mouse } from '../../js/common/Mouse.js'
 import { KeyInput } from '../../js/common/KeyInput.js';
 import { Camera, CameraMovement } from '../../js/common/Camera.js';
-import { Sphere, Sphere2 } from '../../js/geometry/vertexObjects.js';
+import { Sphere, Sphere2 } from '../../js/geometry/VertexObjects.js';
 
 /**
  *

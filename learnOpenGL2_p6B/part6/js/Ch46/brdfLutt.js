@@ -1,9 +1,7 @@
-import { vs_brdf, fs_brdf } from '../../js/Ch46/shaders/1/index.js';
+import { vs_brdf, fs_brdf, } from '../../js/Ch46/shaders/1/index.js';
 import { Shader } from '../../js/common/Shader.js';
 const sizeFloat = 4;
 const whCube = 512;
-const SCR_WIDTH = 1280;
-const SCR_HEIGHT = 720;
 let canvas = document.createElement('canvas');
 canvas.width = whCube;
 canvas.height = whCube;
@@ -18,7 +16,6 @@ if (!ext) {
 }
 let brdfShader = null;
 let textureShader = null;
-let cubeVAO = null;
 let quadVAO = null;
 let captureFBO = null;
 let brdfLUTTexture = null;

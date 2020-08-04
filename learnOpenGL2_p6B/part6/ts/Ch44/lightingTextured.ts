@@ -5,7 +5,7 @@ import { Mouse } from '../../js/common/Mouse.js'
 import { KeyInput } from '../../js/common/KeyInput.js';
 import { Camera, CameraMovement } from '../../js/common/Camera.js';
 //import { Sphere } from '../../js/geometry/sphere.js';
-import { Sphere } from '../../js/geometry/vertexObjects.js'
+import { Sphere } from '../../js/geometry/VertexObjects.js'
 
 /**
  * D3Q: javascript version of Ch44 program in LearnOpenGL

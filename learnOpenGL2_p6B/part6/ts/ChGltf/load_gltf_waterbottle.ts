@@ -1,7 +1,7 @@
 import { vs_pbr, fs_pbr } from "../../js/ChGltf/shaders/1/index.js";
 import { vec3, mat4 } from "../../../math/glmatrix/index.js";
-import { Shader } from "../../js/common/shader.js";
-import { Camera, CameraMovement } from "../../js/common/camera.js";
+import { Shader } from "../../js/common/Shader.js";
+import { Camera, CameraMovement } from "../../js/common/Camera.js";
 import { KeyInput } from "../../js/common/KeyInput.js";
 import { Mouse } from "../../js/common/Mouse.js";
 import { Accessor } from "../../js/geometry/VertexObjects.js";

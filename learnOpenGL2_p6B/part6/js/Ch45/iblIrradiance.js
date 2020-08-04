@@ -178,11 +178,7 @@ function toCubemap(data, width, height) {
     backgroundShader.use(gl);
     gl.uniformMatrix4fv(gl.getUniformLocation(backgroundShader.programId, "projection"), false, projection);
     gl.viewport(0, 0, canvas.width, canvas.height);
-    animate();
-}
-function animate() {
-    render();
-    requestAnimationFrame(animate);
+    requestAnimationFrame(render);
 }
 function render() {
     let currentFrame = performance.now();
@@ -217,6 +213,7 @@ function render() {
         mat4.scale(model, model, vec3.fromValues(0.5, 0.5, 0.5));
         gl.uniformMatrix4fv(gl.getUniformLocation(pbrShader.programId, "model"), false, model);
         renderSphere2();
+        requestAnimationFrame(render);
     }
     backgroundShader.use(gl);
     gl.uniformMatrix4fv(gl.getUniformLocation(backgroundShader.programId, "view"), false, view);

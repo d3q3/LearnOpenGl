@@ -4,7 +4,7 @@ import { Shader } from '../../js/common/Shader.js';
 import { Mouse } from '../../js/common/Mouse.js';
 import { KeyInput } from '../../js/common/KeyInput.js';
 import { Camera, CameraMovement } from '../../js/common/Camera.js';
-import { Sphere2 } from '../../js/geometry/vertexObjects.js';
+import { Sphere2 } from '../../js/geometry/VertexObjects.js';
 const sizeFloat = 4;
 const whCube = 512;
 const SCR_WIDTH = 1280;
