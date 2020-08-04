@@ -1,0 +1,92 @@
+Origine: https://blenderartists.org/uploads/default/original/3X/0/3/03c56fa8e10991b8928cf45d780d03120e136a5f.png,
+tutorial how to create this normal map.
+
+Image: testNormal.png
+  Format: PNG (Portable Network Graphics)
+  Mime type: image/png
+  Class: DirectClass
+  Geometry: 1024x1024+0+0
+  Units: Undefined
+  Colorspace: sRGB
+  Type: TrueColor
+  Base type: Undefined
+  Endianess: Undefined
+  Depth: 8-bit
+  Channel depth:
+    Red: 8-bit
+    Green: 8-bit
+    Blue: 8-bit
+  Channel statistics:
+    Pixels: 1048576
+    Red:
+      min: 0  (0)
+      max: 255 (1)
+      mean: 127.805 (0.501198)
+      standard deviation: 39.9573 (0.156695)
+      kurtosis: 2.11947
+      skewness: -0.0228464
+      entropy: 0.504584
+    Green:
+      min: 0  (0)
+      max: 255 (1)
+      mean: 127.806 (0.5012)
+      standard deviation: 39.9565 (0.156692)
+      kurtosis: 2.11947
+      skewness: -0.0226788
+      entropy: 0.504582
+    Blue:
+      min: 128  (0.501961)
+      max: 255 (1)
+      mean: 238.169 (0.933996)
+      standard deviation: 28.431 (0.111494)
+      kurtosis: 2.07161
+      skewness: -1.72959
+      entropy: 0.509431
+  Image statistics:
+    Overall:
+      min: 0  (0)
+      max: 255 (1)
+      mean: 164.593 (0.645465)
+      standard deviation: 36.1149 (0.141627)
+      kurtosis: -0.890995
+      skewness: 0.10653
+      entropy: 0.506199
+  Rendering intent: Perceptual
+  Gamma: 0.454545
+  Chromaticity:
+    red primary: (0.64,0.33)
+    green primary: (0.3,0.6)
+    blue primary: (0.15,0.06)
+    white point: (0.3127,0.329)
+  Matte color: grey74
+  Background color: white
+  Border color: srgb(223,223,223)
+  Transparent color: none
+  Interlace: None
+  Intensity: Undefined
+  Compose: Over
+  Page geometry: 1024x1024+0+0
+  Dispose: Undefined
+  Iterations: 0
+  Compression: Zip
+  Orientation: Undefined
+  Properties:
+    date:create: 2020-05-27T19:03:51+00:00
+    date:modify: 2020-05-27T19:03:55+00:00
+    png:IHDR.bit-depth-orig: 8
+    png:IHDR.bit_depth: 8
+    png:IHDR.color-type-orig: 2
+    png:IHDR.color_type: 2 (Truecolor)
+    png:IHDR.interlace_method: 0 (Not interlaced)
+    png:IHDR.width,height: 1024, 1024
+    png:sRGB: intent=0 (Perceptual Intent)
+    signature: c513047c1fca96afcde4c8ec847c8a974f1c4b7b234b75da16b25ffaca2ee0f2
+  Artifacts:
+    verbose: true
+  Tainted: False
+  Filesize: 125180B
+  Number pixels: 1.04858M
+  Pixels per second: 15.7615MP
+  User time: 0.063u
+  Elapsed time: 0:01.066
+  Version: ImageMagick 7.0.9-24 Q16 x64 2020-02-17 http://www.imagemagick.org

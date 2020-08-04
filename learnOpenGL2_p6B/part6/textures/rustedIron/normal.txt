@@ -1,0 +1,93 @@
+Image: normal.png
+  Format: PNG (Portable Network Graphics)
+  Mime type: image/png
+  Class: DirectClass
+  Geometry: 2048x2048+0+0
+  Resolution: 28.35x28.35
+  Print size: 72.2399x72.2399
+  Units: PixelsPerCentimeter
+  Colorspace: sRGB
+  Type: TrueColor
+  Base type: Undefined
+  Endianess: Undefined
+  Depth: 8-bit
+  Channel depth:
+    Red: 8-bit
+    Green: 8-bit
+    Blue: 8-bit
+  Channel statistics:
+    Pixels: 4194304
+    Red:
+      min: 39  (0.152941)
+      max: 205 (0.803922)
+      mean: 126.267 (0.495166)
+      standard deviation: 13.2137 (0.0518184)
+      kurtosis: 2.87942
+      skewness: -0.100252
+      entropy: 0.747922
+    Green:
+      min: 40  (0.156863)
+      max: 206 (0.807843)
+      mean: 126.249 (0.495094)
+      standard deviation: 13.5863 (0.0532796)
+      kurtosis: 2.7099
+      skewness: 0.0200856
+      entropy: 0.752263
+    Blue:
+      min: 138  (0.541176)
+      max: 255 (1)
+      mean: 255 (1)
+      standard deviation: 0.0570626 (0.000223775)
+      kurtosis: 4.12097e+006
+      skewness: -2034.37
+      entropy: 5.58917e-006
+  Image statistics:
+    Overall:
+      min: 39  (0.152941)
+      max: 255 (1)
+      mean: 169.172 (0.66342)
+      standard deviation: 8.95235 (0.0351073)
+      kurtosis: -1.49215
+      skewness: 0.607994
+      entropy: 0.500063
+  Rendering intent: Perceptual
+  Gamma: 0.454545
+  Chromaticity:
+    red primary: (0.63999,0.33001)
+    green primary: (0.3,0.6)
+    blue primary: (0.15,0.05999)
+    white point: (0.31269,0.32899)
+  Matte color: grey74
+  Background color: white
+  Border color: srgb(223,223,223)
+  Transparent color: none
+  Interlace: None
+  Intensity: Undefined
+  Compose: Over
+  Page geometry: 2048x2048+0+0
+  Dispose: Undefined
+  Iterations: 0
+  Compression: Zip
+  Orientation: Undefined
+  Properties:
+    date:create: 2020-04-01T20:01:11+00:00
+    date:modify: 2019-12-23T10:59:10+00:00
+    png:cHRM: chunk was found (see Chromaticity, above)
+    png:iCCP: chunk was found
+    png:IHDR.bit-depth-orig: 8
+    png:IHDR.bit_depth: 8
+    png:IHDR.color-type-orig: 2
+    png:IHDR.color_type: 2 (Truecolor)
+    png:IHDR.interlace_method: 0 (Not interlaced)
+    png:IHDR.width,height: 2048, 2048
+    png:pHYs: x_res=2835, y_res=2835, units=1
+    signature: f29febc1c2013b544f95a50c5efb6232cd90064363cd9ec36b2c83d6b20c8dcc
+  Artifacts:
+    verbose: true
+  Tainted: False
+  Filesize: 7.33422MiB
+  Number pixels: 4.1943M
+  Pixels per second: 23.9631MP
+  User time: 0.156u
+  Elapsed time: 0:01.175
+  Version: ImageMagick 7.0.9-24 Q16 x64 2020-02-17 http://www.imagemagick.org
