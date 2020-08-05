@@ -57,7 +57,7 @@ let lightColors = new Float32Array([
 //let gltfUrl = "../../models/waterBottle/gltf/waterBottle.gltf";// scaleModel = 15.0
 //let gltfUrl = "../../models/Monster/gltf/monster.gltf"; //scaleModel=0.1;
 //let gltfUrl = "../../models/cyborgObjCam/cyborgObjCam.gltf"; //scaleModel = 1.0
-let gltfUrl = "../../models/2CylinderEngine/gltf/2CylinderEngine.gltf"; //scaleModel = 0.01
+let gltfUrl = "../../models/2CylinderEngine/glTF/2CylinderEngine.gltf"; //scaleModel = 0.01
 
 let scaleModel = 0.01;
 

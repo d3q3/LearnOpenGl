@@ -1,7 +1,7 @@
 import { vs_pbr, fs_pbr } from "../../js/ChGltf/shaders/3/index.js";
 import { vec3, mat4 } from "../../../math/glmatrix/index.js";
 import { PbrShader } from "../../js/ChGltf/PbrShader.js";
-import { Camera, CameraMovement } from "../../js/common/camera.js";
+import { Camera, CameraMovement } from "../../js/common/Camera.js";
 import { KeyInput } from "../../js/common/KeyInput.js";
 import { Mouse } from "../../js/common/Mouse.js";
 import { GltfLoader, GltfResource } from "../../js/geometry/GltfLoader.js";
@@ -54,7 +54,7 @@ let lightColors = new Float32Array([
 
 // load our mesh
 //let gltfUrl = "../../models/cyborg/cyborg.gltf"; //scaleModel = 1.0
-let gltfUrl = "../../models/waterBottle/gltf/waterBottle.gltf";// scaleModel = 15.0
+let gltfUrl = "../../models/WaterBottle/glTF/WaterBottle.gltf";// scaleModel = 15.0
 //let gltfUrl = "../../models/Monster/gltf/monster.gltf"; //scaleModel=0.01;
 //let gltfUrl = "../../models/cyborgObjCam/cyborgObjCam.gltf"; //scaleModel = 1.0
 //let gltfUrl = "../../models/2CylinderEngine/gltf/2CylinderEngine.gltf"; //scaleModel = 0.01
