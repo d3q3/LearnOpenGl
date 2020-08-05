@@ -35,7 +35,7 @@ let lightColors = new Float32Array([
     300.0, 300.0, 300.0,
     300.0, 300.0, 300.0
 ]);
-let gltfUrl = "../../models/waterBottle/gltf/waterBottle.gltf";
+let gltfUrl = "../../models/WaterBottle/glTF/WaterBottle.gltf";
 let scaleModel = 15.0;
 let main = function () {
     canvas = document.createElement('canvas');

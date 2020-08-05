@@ -35,7 +35,7 @@ let lightColors = new Float32Array([
     300.0, 300.0, 300.0,
     300.0, 300.0, 300.0
 ]);
-let gltfUrl = "../../models/2CylinderEngine/gltf/2CylinderEngine.gltf";
+let gltfUrl = "../../models/2CylinderEngine/glTF/2CylinderEngine.gltf";
 let scaleModel = 0.01;
 let main = function () {
     canvas = document.createElement('canvas');
