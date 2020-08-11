@@ -1,0 +1,22 @@
+*
+review code Part 6. At rougness=0 very small reflexion area is not shown.
+
+*
+remove out-commented parts in programs.
+
+*
+harmonize code between the different parts  in /common subdirectories.
+
+*
+add some Part4 programs:
+- 22 depth testing
+- 23 blending
+- 26 framebuffers
+- 27 cubemaps
+- 31 instancing (?)
+
+*
+add a new version of gltf loader with animations.
+
+*
+find official documentation for glyphs. Review creating 3D text.
