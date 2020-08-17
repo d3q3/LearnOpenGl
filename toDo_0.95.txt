@@ -6,11 +6,13 @@ remove out-commented parts in programs.
 
 *
 harmonize code between the different parts  in /common subdirectories.
+	gltf: differences in use of material
+	vertexObjects: different versions
+	except in part 1,2: always use vertexObjects instead of local cube/ sphere/ quad 
 
 *
-add some Part4 programs:
+add morePart4 programs (?):
 - 22 depth testing
-- 23 blending
 - 26 framebuffers
 - 27 cubemaps
 - 31 instancing (?)
@@ -19,4 +21,4 @@ add some Part4 programs:
 add a new version of gltf loader with animations.
 
 *
-find official documentation for glyphs. Review creating 3D text.
+find official documentation for glyphs. Review creating 3D text in part7.
