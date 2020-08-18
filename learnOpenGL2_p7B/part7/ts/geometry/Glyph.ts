@@ -182,8 +182,8 @@ export class GlyphVertexObject extends VertexObject {
         let stride = row * bytesFloat;
         this.attributes = { POSITION: 0, NORMAL: 1 };
         this.accessors = [
-            new Accessor(0, bytesFloat, 3, 0, stride),
-            new Accessor(0, bytesFloat, 3, 3 * bytesFloat, stride),
+            new Accessor(0, bytesFloat, 3, 0, irow, stride),
+            new Accessor(0, bytesFloat, 3, 3 * bytesFloat, irow, stride)
         ];
 
     }

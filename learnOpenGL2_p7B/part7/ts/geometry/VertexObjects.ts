@@ -1,5 +1,26 @@
-
 import { vec3 } from "../../../math/glmatrix/index.js"
+
+/**
+ * D3Q: An AccessorObject is a combination of accessors for one VertexObject.
+ * this object does not own the indices and vertex-data, unlike a VertexObject.
+ */
+export class AccessorObject {
+    /**
+     * the accessor for the index buffer
+     */
+    indexAccessor: Accessor;
+    /**
+     * names and ids of accessor, e.g. {NORMAL: 2, TEXCOORD_0: 4, POSITION: 1},
+     * in the same way as used in a GLTF file
+     */
+    attributes: any = {};
+    /**
+     * the accessors for the attributes. The accessors can have different
+     * bufferId's. For a subclass VertexObject the bufferId's of the accessors
+     * are all equal to 0.
+     */
+    accessors: Accessor[] = [];
+}
 
 /**
  * D3Q: A VertexObject contains the vertices and indices of an object. The vertices 
@@ -18,13 +39,13 @@ import { vec3 } from "../../../math/glmatrix/index.js"
  * 
  * All subclasses must have indices defined.
  */
-export class VertexObject {
+export class VertexObject extends AccessorObject {
     vertices: Float32Array;
     indices: Uint16Array;
     //bytesStride: number;
 
-    attributes: any = {};
-    accessors: Accessor[] = [];
+    // attributes: any = {};
+    // accessors: Accessor[] = [];
 
     // constructor() {
     //     this.bytesStride = bytesStride;
@@ -40,18 +61,23 @@ export class VertexObject {
  * example: 
  * a Matrix3 has 3x3 elements of the basetype, suppose float of 4 bytes. Then use
  * an accessor with bytesComponent=4 and countComponent=9. byteOffset is the index in the buffer
- * of the first Matrix3. bytesStride is the number of bytes after which the next
- * Matrix3 can be found.
+ * of the first Matrix3. countElements is the number of matrices. bytesStride is the 
+ * number of bytes before next Matrix3 can be found.
  */
 export class Accessor {
     bufferId: number;
     bytesComponent: number;
-    countComponent: number; stride: number; offset: number;
-    constructor(bufferId, bytesComponent: number, countComponent: number, byteOffset: number, byteStride: number) {
+    countComponent: number;
+    stride: number;
+    byteOffset: number;
+    countElements: number
+    constructor(bufferId, bytesComponent: number, countComponent: number,
+        byteOffset: number, countElements: number, byteStride: number) {
         this.bufferId = bufferId;
         this.bytesComponent = bytesComponent;
         this.countComponent = countComponent;
-        this.offset = byteOffset;
+        this.byteOffset = byteOffset;
+        this.countElements = countElements;
         this.stride = byteStride;
     }
 }
@@ -70,7 +96,6 @@ export class Cube extends VertexObject {
         // stride: the length of a record is 8*bytesFloat = 32 bytes;
         // 3 floats for POSITION + 3 floats for NORMAL + 2 floats for TEXCOORD_0.
         let stride = 8 * bytesFloat;
-        //this.bytesStride = stride;
 
         this.vertices = new Float32Array([
             // back face
@@ -129,9 +154,9 @@ export class Cube extends VertexObject {
 
         this.attributes = { POSITION: 0, NORMAL: 1, TEXCOORD_0: 2 };
         this.accessors = [
-            new Accessor(0, bytesFloat, 3, 0, stride),
-            new Accessor(0, bytesFloat, 3, 3 * bytesFloat, stride),
-            new Accessor(0, bytesFloat, 2, 6 * bytesFloat, stride)
+            new Accessor(0, bytesFloat, 3, 0, 36, stride),
+            new Accessor(0, bytesFloat, 3, 3 * bytesFloat, 36, stride),
+            new Accessor(0, bytesFloat, 2, 6 * bytesFloat, 36, stride)
         ];
 
     }
@@ -169,9 +194,9 @@ export class Quad extends VertexObject {
 
         this.attributes = { POSITION: 0, NORMAL: 1, TEXCOORD_0: 2 };
         this.accessors = [
-            new Accessor(0, bytesFloat, 3, 0, stride),
-            new Accessor(0, bytesFloat, 3, 3 * bytesFloat, stride),
-            new Accessor(0, bytesFloat, 2, 6 * bytesFloat, stride)
+            new Accessor(0, bytesFloat, 3, 0, 6, stride),
+            new Accessor(0, bytesFloat, 3, 3 * bytesFloat, 6, stride),
+            new Accessor(0, bytesFloat, 2, 6 * bytesFloat, 6, stride)
         ];
 
     }
@@ -180,8 +205,6 @@ export class Quad extends VertexObject {
 /**
  * D3Q: Sphere with radius 1.0.
  * Every vertex has POSTITION, NORMAL and TEXCOORD_0 data.
- *
- * Adapted from original source Three.js
  */
 export class Sphere extends VertexObject {
 
@@ -194,21 +217,16 @@ export class Sphere extends VertexObject {
         // stride: the length of a record is 8*bytesFloat = 32 bytes;
         // 3 floats for POSITION + 3 floats for NORMAL + 2 floats for TEXCOORD_0.
         let stride = 8 * bytesFloat;
-        //this.bytesStride = stride;
 
         let vertices = [];
         let indices = [];
 
-        //radius projected on the xz-plane
-        let radiusxy = 0;
+        //radius projected on the XZ-plane
+        let radiusXZ = 0;
         var x: number, y: number, z: number;
 
         var normal: vec3 = vec3.create();
-        //var thetaEnd = Math.min(thetaStart + thetaLength, Math.PI);
-        let thetaStart = 0;
-        let thetaEnd = Math.PI;
         let thetaLength = Math.PI;
-        let phiStart = 0;
         let phiLength = 2 * Math.PI;
 
 
@@ -231,19 +249,19 @@ export class Sphere extends VertexObject {
         and the bottom segment will be represented by triangles instead of rectangles.
         */
 
-        //heightSegments+1 heights
+        // heightSegments+1 heights
         for (var iy = 0; iy <= heightSegments; iy++) {
             var v = 1.0 - iy / heightSegments;
 
-            //widthSegments+1 widths
+            // widthSegments+1 widths
             for (var ix = 0; ix <= widthSegments; ix++) {
                 var u = ix / widthSegments;
 
                 // position:
-                radiusxy = radius * Math.sin(thetaStart + v * thetaLength);
-                x = radiusxy * Math.cos(phiStart + u * phiLength);
-                y = radius * Math.cos(thetaStart + v * thetaLength);
-                z = -radiusxy * Math.sin(phiStart + u * phiLength);
+                radiusXZ = radius * Math.sin(v * thetaLength);
+                x = radiusXZ * Math.cos(u * phiLength);
+                y = radius * Math.cos(v * thetaLength);
+                z = -radiusXZ * Math.sin(u * phiLength);
                 vertices.push(x, y, z);
 
                 // normal
@@ -253,10 +271,10 @@ export class Sphere extends VertexObject {
 
                 // uv
                 var uOffset = 0;
-                if (iy == 0 && thetaStart == 0) {
+                if (iy == 0) {
                     // D3Q: at north pole
                     uOffset = 0.5 / widthSegments;
-                } else if (iy == (heightSegments + 1) && thetaEnd == Math.PI) {
+                } else if (iy == (heightSegments + 1)) {
                     // D3Q: at south pole
                     uOffset = 0.5 / widthSegments;
                 }
@@ -267,9 +285,15 @@ export class Sphere extends VertexObject {
         this.vertices = new Float32Array(vertices);
 
         // indices
+        // iyFirst is start index for this segment
+        // iyNext is start index next segment
+        // there are widthSegments squares in each segment
         var iyFirst = 0;
         var iyNext = widthSegments + 1;
+
+        // put indices for square at (ix, iy) in a, b, c, d
         var a: number, b: number, c: number, d: number;
+
         for (iy = 0; iy <= heightSegments; iy++) {
 
             for (ix = 0; ix <= widthSegments; ix++) {
@@ -279,10 +303,11 @@ export class Sphere extends VertexObject {
                 c = iyNext + ix;
                 d = iyNext + ix + 1;
 
-                if (iy !== 0 || thetaStart > 0) indices.push(a, b, d);
-                if (iy !== heightSegments - 1 || thetaEnd < Math.PI) indices.push(b, c, d);
-
+                // create (except for top and bottom of sphere) two triangles
+                if (iy !== 0) indices.push(a, b, d);
+                if (iy !== heightSegments - 1) indices.push(b, c, d);
             }
+            // next segment
             iyFirst += widthSegments + 1;
             iyNext += widthSegments + 1;
         }
@@ -290,11 +315,10 @@ export class Sphere extends VertexObject {
 
         this.attributes = { POSITION: 0, NORMAL: 1, TEXCOORD_0: 2 };
         this.accessors = [
-            new Accessor(0, bytesFloat, 3, 0, stride),
-            new Accessor(0, bytesFloat, 3, 3 * bytesFloat, stride),
-            new Accessor(0, bytesFloat, 2, 6 * bytesFloat, stride)
+            new Accessor(0, bytesFloat, 3, 0, vertices.length / 8, stride),
+            new Accessor(0, bytesFloat, 3, 3 * bytesFloat, vertices.length / 8, stride),
+            new Accessor(0, bytesFloat, 2, 6 * bytesFloat, vertices.length / 8, stride)
         ];
-
     }
 }
 
@@ -302,7 +326,7 @@ export class Sphere extends VertexObject {
 /**
  * This Sphere class is more conform the text in LearnOpenGL.
  * Not that radius is 1.0.
- * Rendering must be done with GL_TRIANGLE_STRIP!
+ * Rendering must be done with GL_TRIANGLE_STRIP! !!!! !
  */
 export class Sphere2 extends VertexObject {
 
@@ -367,7 +391,7 @@ export class Sphere2 extends VertexObject {
 
         this.indices = new Uint16Array(indices);
 
-        for (let i = 0; i < positions.length; ++i) {
+        for (let i = 0; i < positions.length / 3; ++i) {
             vertices.push(positions[3 * i], positions[3 * i + 1], positions[3 * i + 2]);
             vertices.push(normals[3 * i], normals[3 * i + 1], normals[3 * i + 2]);
             vertices.push(uv[2 * i], uv[2 * i + 1]);
@@ -377,9 +401,9 @@ export class Sphere2 extends VertexObject {
 
         this.attributes = { POSITION: 0, NORMAL: 1, TEXCOORD_0: 2 };
         this.accessors = [
-            new Accessor(0, bytesFloat, 3, 0, stride),
-            new Accessor(0, bytesFloat, 3, 3 * bytesFloat, stride),
-            new Accessor(0, bytesFloat, 2, 6 * bytesFloat, stride)
+            new Accessor(0, bytesFloat, 3, 0, vertices.length / 8, stride),
+            new Accessor(0, bytesFloat, 3, 3 * bytesFloat, vertices.length / 8, stride),
+            new Accessor(0, bytesFloat, 2, 6 * bytesFloat, vertices.length / 8, stride)
         ];
 
 

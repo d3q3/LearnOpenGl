@@ -262,25 +262,6 @@ export class Line extends Curve2d {
 
 
 
-// function cubicInterpolation(t, p0: vec2, p1: vec2, p2: vec2, p3: vec2) {
-//     let s = 1 - t; let t2 = t * t; let s2 = s * s;
-//     let cub = vec2.create();
-//     let cub2 = vec2.create();
-
-//     vec2.scale(cub, p0, s2 * s);
-//     vec2.scale(cub2, p1, 3 * s2 * t);
-//     vec2.add(cub, cub, cub2);
-
-//     vec2.scale(cub2, p2, 3 * s * t2);
-//     vec2.add(cub, cub, cub2);
-
-//     vec2.scale(cub, p3, t * t2);
-//     vec2.add(cub, cub, cub2);
-
-//     return cub;
-// }
-
-
 export class CubicBezier extends Curve2d {
 
     v0: vec2; v1: vec2; v2: vec2; v3: vec2;
@@ -340,7 +321,3 @@ export class QuadraticBezier extends Curve2d {
     };
 
 }
-
-
-
-
