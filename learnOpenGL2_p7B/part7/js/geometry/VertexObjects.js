@@ -1,19 +1,22 @@
 import { vec3 } from "../../../math/glmatrix/index.js";
-export class VertexObject {
+export class AccessorObject {
     constructor() {
         this.attributes = {};
         this.accessors = [];
     }
+}
+export class VertexObject extends AccessorObject {
     getBuffers() {
         return [this.vertices];
     }
 }
 export class Accessor {
-    constructor(bufferId, bytesComponent, countComponent, byteOffset, byteStride) {
+    constructor(bufferId, bytesComponent, countComponent, byteOffset, countElements, byteStride) {
         this.bufferId = bufferId;
         this.bytesComponent = bytesComponent;
         this.countComponent = countComponent;
-        this.offset = byteOffset;
+        this.byteOffset = byteOffset;
+        this.countElements = countElements;
         this.stride = byteStride;
     }
 }
@@ -70,9 +73,9 @@ export class Cube extends VertexObject {
         ]);
         this.attributes = { POSITION: 0, NORMAL: 1, TEXCOORD_0: 2 };
         this.accessors = [
-            new Accessor(0, bytesFloat, 3, 0, stride),
-            new Accessor(0, bytesFloat, 3, 3 * bytesFloat, stride),
-            new Accessor(0, bytesFloat, 2, 6 * bytesFloat, stride)
+            new Accessor(0, bytesFloat, 3, 0, 36, stride),
+            new Accessor(0, bytesFloat, 3, 3 * bytesFloat, 36, stride),
+            new Accessor(0, bytesFloat, 2, 6 * bytesFloat, 36, stride)
         ];
     }
 }
@@ -94,9 +97,9 @@ export class Quad extends VertexObject {
         ]);
         this.attributes = { POSITION: 0, NORMAL: 1, TEXCOORD_0: 2 };
         this.accessors = [
-            new Accessor(0, bytesFloat, 3, 0, stride),
-            new Accessor(0, bytesFloat, 3, 3 * bytesFloat, stride),
-            new Accessor(0, bytesFloat, 2, 6 * bytesFloat, stride)
+            new Accessor(0, bytesFloat, 3, 0, 6, stride),
+            new Accessor(0, bytesFloat, 3, 3 * bytesFloat, 6, stride),
+            new Accessor(0, bytesFloat, 2, 6 * bytesFloat, 6, stride)
         ];
     }
 }
@@ -108,31 +111,28 @@ export class Sphere extends VertexObject {
         let stride = 8 * bytesFloat;
         let vertices = [];
         let indices = [];
-        let radiusxy = 0;
+        let radiusXZ = 0;
         var x, y, z;
         var normal = vec3.create();
-        let thetaStart = 0;
-        let thetaEnd = Math.PI;
         let thetaLength = Math.PI;
-        let phiStart = 0;
         let phiLength = 2 * Math.PI;
         for (var iy = 0; iy <= heightSegments; iy++) {
             var v = 1.0 - iy / heightSegments;
             for (var ix = 0; ix <= widthSegments; ix++) {
                 var u = ix / widthSegments;
-                radiusxy = radius * Math.sin(thetaStart + v * thetaLength);
-                x = radiusxy * Math.cos(phiStart + u * phiLength);
-                y = radius * Math.cos(thetaStart + v * thetaLength);
-                z = -radiusxy * Math.sin(phiStart + u * phiLength);
+                radiusXZ = radius * Math.sin(v * thetaLength);
+                x = radiusXZ * Math.cos(u * phiLength);
+                y = radius * Math.cos(v * thetaLength);
+                z = -radiusXZ * Math.sin(u * phiLength);
                 vertices.push(x, y, z);
                 normal = vec3.fromValues(x, y, z);
                 vec3.normalize(normal, normal);
                 vertices.push(normal[0], normal[1], normal[2]);
                 var uOffset = 0;
-                if (iy == 0 && thetaStart == 0) {
+                if (iy == 0) {
                     uOffset = 0.5 / widthSegments;
                 }
-                else if (iy == (heightSegments + 1) && thetaEnd == Math.PI) {
+                else if (iy == (heightSegments + 1)) {
                     uOffset = 0.5 / widthSegments;
                 }
                 vertices.push(u + uOffset, v);
@@ -148,9 +148,9 @@ export class Sphere extends VertexObject {
                 b = iyFirst + ix;
                 c = iyNext + ix;
                 d = iyNext + ix + 1;
-                if (iy !== 0 || thetaStart > 0)
+                if (iy !== 0)
                     indices.push(a, b, d);
-                if (iy !== heightSegments - 1 || thetaEnd < Math.PI)
+                if (iy !== heightSegments - 1)
                     indices.push(b, c, d);
             }
             iyFirst += widthSegments + 1;
@@ -159,9 +159,9 @@ export class Sphere extends VertexObject {
         this.indices = new Uint16Array(indices);
         this.attributes = { POSITION: 0, NORMAL: 1, TEXCOORD_0: 2 };
         this.accessors = [
-            new Accessor(0, bytesFloat, 3, 0, stride),
-            new Accessor(0, bytesFloat, 3, 3 * bytesFloat, stride),
-            new Accessor(0, bytesFloat, 2, 6 * bytesFloat, stride)
+            new Accessor(0, bytesFloat, 3, 0, vertices.length / 8, stride),
+            new Accessor(0, bytesFloat, 3, 3 * bytesFloat, vertices.length / 8, stride),
+            new Accessor(0, bytesFloat, 2, 6 * bytesFloat, vertices.length / 8, stride)
         ];
     }
 }
@@ -206,7 +206,7 @@ export class Sphere2 extends VertexObject {
             oddRow = !oddRow;
         }
         this.indices = new Uint16Array(indices);
-        for (let i = 0; i < positions.length; ++i) {
+        for (let i = 0; i < positions.length / 3; ++i) {
             vertices.push(positions[3 * i], positions[3 * i + 1], positions[3 * i + 2]);
             vertices.push(normals[3 * i], normals[3 * i + 1], normals[3 * i + 2]);
             vertices.push(uv[2 * i], uv[2 * i + 1]);
@@ -214,9 +214,9 @@ export class Sphere2 extends VertexObject {
         this.vertices = new Float32Array(vertices);
         this.attributes = { POSITION: 0, NORMAL: 1, TEXCOORD_0: 2 };
         this.accessors = [
-            new Accessor(0, bytesFloat, 3, 0, stride),
-            new Accessor(0, bytesFloat, 3, 3 * bytesFloat, stride),
-            new Accessor(0, bytesFloat, 2, 6 * bytesFloat, stride)
+            new Accessor(0, bytesFloat, 3, 0, vertices.length / 8, stride),
+            new Accessor(0, bytesFloat, 3, 3 * bytesFloat, vertices.length / 8, stride),
+            new Accessor(0, bytesFloat, 2, 6 * bytesFloat, vertices.length / 8, stride)
         ];
     }
 }

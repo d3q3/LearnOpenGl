@@ -1,8 +1,11 @@
-export declare class VertexObject {
-    vertices: Float32Array;
-    indices: Uint16Array;
+export declare class AccessorObject {
+    indexAccessor: Accessor;
     attributes: any;
     accessors: Accessor[];
+}
+export declare class VertexObject extends AccessorObject {
+    vertices: Float32Array;
+    indices: Uint16Array;
     getBuffers(): Float32Array[];
 }
 export declare class Accessor {
@@ -10,8 +13,9 @@ export declare class Accessor {
     bytesComponent: number;
     countComponent: number;
     stride: number;
-    offset: number;
-    constructor(bufferId: any, bytesComponent: number, countComponent: number, byteOffset: number, byteStride: number);
+    byteOffset: number;
+    countElements: number;
+    constructor(bufferId: any, bytesComponent: number, countComponent: number, byteOffset: number, countElements: number, byteStride: number);
 }
 export declare class Cube extends VertexObject {
     constructor();
