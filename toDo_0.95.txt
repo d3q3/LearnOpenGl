@@ -7,7 +7,7 @@ remove out-commented parts in programs.
 *
 harmonize code between the different parts  in /common subdirectories.
 	gltf: differences in use of material
-	vertexObjects: different versions
+	vertexObjects: different versions --DONE
 	except in part 1,2: always use vertexObjects instead of local cube/ sphere/ quad 
 
 *
