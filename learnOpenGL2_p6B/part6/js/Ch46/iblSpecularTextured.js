@@ -4,7 +4,7 @@ import { Shader } from '../../js/common/Shader.js';
 import { Mouse } from '../../js/common/Mouse.js';
 import { KeyInput } from '../../js/common/KeyInput.js';
 import { Camera, CameraMovement } from '../../js/common/Camera.js';
-import { Sphere, Cube, Quad } from '../../js/geometry/geometry.js';
+import { Sphere, Cube, Quad } from '../../js/geometry/VertexObjects.js';
 const sizeFloat = 4;
 const whCube = 512;
 const SCR_WIDTH = 1280;
@@ -493,16 +493,16 @@ let CreateVAO = function (geo, layout) {
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, ebo);
     gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, geo.indices, gl.STATIC_DRAW);
     let acc = geo.accessors[geo.attributes.POSITION];
-    gl.vertexAttribPointer(layout.POSITION, acc.count, gl.FLOAT, false, acc.stride, acc.offset);
+    gl.vertexAttribPointer(layout.POSITION, acc.countComponent, gl.FLOAT, false, acc.stride, acc.byteOffset);
     gl.enableVertexAttribArray(layout.POSITION);
     if (layout.TEXCOORD_0) {
         acc = geo.accessors[geo.attributes.TEXCOORD_0];
-        gl.vertexAttribPointer(layout.TEXCOORD_0, acc.count, gl.FLOAT, false, acc.stride, acc.offset);
+        gl.vertexAttribPointer(layout.TEXCOORD_0, acc.countComponent, gl.FLOAT, false, acc.stride, acc.byteOffset);
         gl.enableVertexAttribArray(layout.TEXCOORD_0);
     }
     if (layout.NORMAL) {
         acc = geo.accessors[geo.attributes.NORMAL];
-        gl.vertexAttribPointer(layout.NORMAL, acc.count, gl.FLOAT, false, acc.stride, acc.offset);
+        gl.vertexAttribPointer(layout.NORMAL, acc.countComponent, gl.FLOAT, false, acc.stride, acc.byteOffset);
         gl.enableVertexAttribArray(layout.NORMAL);
     }
     return VAO;

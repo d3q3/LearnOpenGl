@@ -1,7 +1,7 @@
 /// <reference types="webgl2" />
 import { mat4 } from "../../../math/glmatrix/index.js";
 import { Accessor } from "../../js/geometry/VertexObjects.js";
-import { GltfModel, GltfVertexObject } from "../geometry/GltfModel.js";
+import { GltfModel, GltfVertexObject } from "../../js/geometry/GltfModel.js";
 export declare class GlSceneModel {
     name: string;
     glBuffers: WebGLBuffer[];
@@ -24,8 +24,8 @@ export declare class GlSceneManager {
     gl: WebGL2RenderingContext;
     glModels: GlSceneModel[];
     attributeLayout: any;
-    getModelNameIndex(name: string): number;
     constructor(gl: WebGL2RenderingContext);
+    getModelNameIndex(name: string): number;
     private createGlModel;
     private createGlScene;
     getGlScene(glftModel: GltfModel, sceneId: number): GlScene;

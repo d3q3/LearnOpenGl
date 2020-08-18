@@ -12,6 +12,11 @@ export class GlDrawMesh {
 export class GlScene {
 }
 export class GlSceneManager {
+    constructor(gl) {
+        this.gl = gl;
+        this.glModels = [];
+        this.attributeLayout = { POSITION: 0, TEXCOORD_0: 1, NORMAL: 2 };
+    }
     getModelNameIndex(name) {
         let found = false;
         let i = 0;
@@ -25,11 +30,6 @@ export class GlSceneManager {
             return i;
         else
             return null;
-    }
-    constructor(gl) {
-        this.gl = gl;
-        this.glModels = [];
-        this.attributeLayout = { POSITION: 0, TEXCOORD_0: 1, NORMAL: 2 };
     }
     createGlModel(model) {
         let glModel = new GlSceneModel();
