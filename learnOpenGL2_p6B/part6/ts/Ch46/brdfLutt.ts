@@ -1,18 +1,7 @@
-import { vec3, vec4, mat4 } from '../../../math/glmatrix/index.js';
 import {
-    // vs_pbr, fs_pbr,
-    // vs_background, fs_background,
-    // vs_cubemap, fs_equirectangularToCubemap,
-    // fs_prefilter,
     vs_brdf, fs_brdf,
-    // fs_irradianceConvolution
 } from '../../js/Ch46/shaders/1/index.js';
 import { Shader } from '../../js/common/Shader.js'
-// import { Mouse } from '../../js/common/Mouse.js'
-// import { KeyInput } from '../../js/common/KeyInput.js';
-// import { Camera, CameraMovement } from '../../js/common/Camera.js';
-// import { Sphere, Sphere2 } from '../../js/geometry/sphere.js';
-
 
 /**
  *
@@ -47,7 +36,6 @@ if (!ext) {
 let brdfShader: Shader = null;
 let textureShader: Shader = null;
 
-// let cubeVAO = null;
 let quadVAO = null;
 let captureFBO = null;
 let brdfLUTTexture = null;
@@ -129,7 +117,7 @@ void main()
 }();
 
 /**
- * Do not copy! normals replaced with colors...
+ * Do not copy this quad! normals replaced with colors...
  */
 function renderQuad() {
     if (!quadVAO) {

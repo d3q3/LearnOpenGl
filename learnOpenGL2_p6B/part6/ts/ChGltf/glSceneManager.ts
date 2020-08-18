@@ -1,5 +1,5 @@
-import { vec3, mat4 } from "../../../math/glmatrix/index.js";
-import { VertexObject, Accessor } from "../../js/geometry/VertexObjects.js";
+import { mat4 } from "../../../math/glmatrix/index.js";
+import { Accessor } from "../../js/geometry/VertexObjects.js";
 import { GltfModel, GltfMesh, GltfScene, GltfNode, GltfCamera, GltfVertexObject } from "../../js/geometry/GltfModel.js";
 
 export class GlSceneModel {
@@ -108,9 +108,6 @@ export class GlSceneManager {
             //let mat = vo.material;
             glMesh.mats.push(vo.materialId);
 
-            // get layout for material, for now default, material = null:
-            //let layout = { POSITION: 0, NORMAL: 1, TEXCOORD_0: 2 };
-            //let layout = { POSITION: 0, NORMAL: 2, TEXCOORD_0: 1 };
             let layout = this.attributeLayout;
 
             let vao = gl.createVertexArray();
@@ -182,5 +179,4 @@ export class GlSceneManager {
             glModel.glBuffers[ib] = vbo;
         }
     }
-
 }

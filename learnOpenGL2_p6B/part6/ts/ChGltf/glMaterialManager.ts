@@ -113,8 +113,6 @@ export class GlMaterialManager {
             if (mat.emissiveTexture) {
                 m.mapCode += 32; //useEmissveMap
                 m.glEmissive = glModel.glTextures[mat.emissiveTexture.index];
-                //m.emissiveFactor = mat.  .emissiveTexture.strength;
-                //m.emissiveFactor = mat.  .emissiveTexture.strength;
             }
             m.emissiveFactor = mat.emissiveFactor;
         }

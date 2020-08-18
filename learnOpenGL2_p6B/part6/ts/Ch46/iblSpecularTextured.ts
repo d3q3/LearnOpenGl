@@ -11,7 +11,7 @@ import { Shader } from '../../js/common/Shader.js'
 import { Mouse } from '../../js/common/Mouse.js'
 import { KeyInput } from '../../js/common/KeyInput.js';
 import { Camera, CameraMovement } from '../../js/common/Camera.js';
-import { Geometry, Sphere, Cube, Quad } from '../../js/geometry/geometry.js';
+import { VertexObject, Sphere, Cube, Quad } from '../../js/geometry/VertexObjects.js';
 
 /**
  *
@@ -465,7 +465,6 @@ function toCubemap(data, width, height) {
         for (let i = 0; i < 6; ++i) {
 
             gl.uniformMatrix4fv(gl.getUniformLocation(prefilterShader.programId, "view"), false, captureViews[i]);
-            // prefilterShader.setMat4("view", captureViews[i]);
 
             gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_CUBE_MAP_POSITIVE_X + i, prefilterMap, mip);
             error = gl.checkFramebufferStatus(gl.FRAMEBUFFER);
@@ -515,7 +514,6 @@ function toCubemap(data, width, height) {
     mat4.perspective(projection, (camera.Zoom) * Math.PI / 180, SCR_WIDTH / SCR_HEIGHT, 0.1, 100.0);
     pbrShader.use(gl);
     gl.uniformMatrix4fv(gl.getUniformLocation(pbrShader.programId, "projection"), false, projection)
-    //pbrShader.setMat4("projection", projection);
 
     //D3Q: missing in original code:
     gl.uniform3fv(gl.getUniformLocation(pbrShader.programId, "lightPositions"), lightPositions);
@@ -524,7 +522,6 @@ function toCubemap(data, width, height) {
 
     backgroundShader.use(gl);
     gl.uniformMatrix4fv(gl.getUniformLocation(backgroundShader.programId, "projection"), false, projection);
-    //backgroundShader.setMat4("projection", projection);
 
     // then before rendering, configure the viewport to the original framebuffer's screen dimensions
     // let scrWidth = SCR_WIDTH, scrHeight = SCR_HEIGHT;
@@ -724,7 +721,7 @@ function mouse_scroll_callback(yoffset: number) {
  * @param geo a subclass of Geometry
  * @param layout an object with the layout of attributes in the shader
  */
-let CreateVAO = function (geo: Geometry, layout: any) {
+let CreateVAO = function (geo: VertexObject, layout: any) {
     let VAO = gl.createVertexArray();
     gl.bindVertexArray(VAO);
 
@@ -738,24 +735,23 @@ let CreateVAO = function (geo: Geometry, layout: any) {
 
     // POSITION
     let acc = geo.accessors[geo.attributes.POSITION];
-    gl.vertexAttribPointer(layout.POSITION, acc.count, gl.FLOAT, false, acc.stride, acc.offset);
+    gl.vertexAttribPointer(layout.POSITION, acc.countComponent, gl.FLOAT, false, acc.stride, acc.byteOffset);
     gl.enableVertexAttribArray(layout.POSITION);
 
     // TEXTURE
     if (layout.TEXCOORD_0) {
         acc = geo.accessors[geo.attributes.TEXCOORD_0];
-        gl.vertexAttribPointer(layout.TEXCOORD_0, acc.count, gl.FLOAT, false, acc.stride, acc.offset);
+        gl.vertexAttribPointer(layout.TEXCOORD_0, acc.countComponent, gl.FLOAT, false, acc.stride, acc.byteOffset);
         gl.enableVertexAttribArray(layout.TEXCOORD_0);
     }
     // NORMAL
     if (layout.NORMAL) {
         acc = geo.accessors[geo.attributes.NORMAL];
-        gl.vertexAttribPointer(layout.NORMAL, acc.count, gl.FLOAT, false, acc.stride, acc.offset);
+        gl.vertexAttribPointer(layout.NORMAL, acc.countComponent, gl.FLOAT, false, acc.stride, acc.byteOffset);
         gl.enableVertexAttribArray(layout.NORMAL);
     }
     return VAO;
 };
-
 
 function renderSphere() {
     if (sphereVAO == null) {
@@ -765,10 +761,6 @@ function renderSphere() {
     gl.bindVertexArray(sphereVAO);
     gl.drawElements(gl.TRIANGLES, sphere.indices.length, gl.UNSIGNED_SHORT, 0);
 }
-
-
-
-
 
 function renderQuad() {
     if (!quadVAO) {
@@ -783,7 +775,6 @@ function renderQuad() {
     gl.bindVertexArray(null);
 }
 
-
 // renderCube() renders a 1x1 3D cube in NDC.
 function renderCube() {
     // initialize (if necessary)
@@ -796,11 +787,6 @@ function renderCube() {
     gl.drawElements(gl.TRIANGLES, cube.indices.length, gl.UNSIGNED_SHORT, 0);
     gl.bindVertexArray(null);
 }
-
-
-
-
-
 
 
 

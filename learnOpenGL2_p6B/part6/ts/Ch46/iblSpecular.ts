@@ -1,4 +1,4 @@
-import { vec3, vec4, mat4 } from '../../../math/glmatrix/index.js';
+import { vec3, mat4 } from '../../../math/glmatrix/index.js';
 import {
     vs_pbr, fs_pbr,
     vs_background, fs_background,
@@ -11,7 +11,7 @@ import { Shader } from '../../js/common/Shader.js'
 import { Mouse } from '../../js/common/Mouse.js'
 import { KeyInput } from '../../js/common/KeyInput.js';
 import { Camera, CameraMovement } from '../../js/common/Camera.js';
-import { Sphere, Sphere2 } from '../../js/geometry/VertexObjects.js';
+import { Sphere2 } from '../../js/geometry/VertexObjects.js';
 
 /**
  *

@@ -1,19 +1,22 @@
-
 import { vec3 } from "../../../math/glmatrix/index.js"
 
 /**
  * D3Q: An AccessorObject is a combination of accessors for one VertexObject.
- * 
+ * this object does not own the indices and vertex-data, unlike a VertexObject.
  */
 export class AccessorObject {
     /**
      * the accessor for the index buffer
      */
     indexAccessor: Accessor;
+    /**
+     * names and ids of accessor, e.g. {NORMAL: 2, TEXCOORD_0: 4, POSITION: 1},
+     * in the same way as used in a GLTF file
+     */
     attributes: any = {};
     /**
      * the accessors for the attributes. The accessors can have different
-     * bufferId's. For a VertexObject the bufferId's of the accessors
+     * bufferId's. For a subclass VertexObject the bufferId's of the accessors
      * are all equal to 0.
      */
     accessors: Accessor[] = [];
@@ -93,7 +96,6 @@ export class Cube extends VertexObject {
         // stride: the length of a record is 8*bytesFloat = 32 bytes;
         // 3 floats for POSITION + 3 floats for NORMAL + 2 floats for TEXCOORD_0.
         let stride = 8 * bytesFloat;
-        //this.bytesStride = stride;
 
         this.vertices = new Float32Array([
             // back face
