@@ -35,12 +35,12 @@ export class GltfModel {
                 this.nodes[i].setChildren(nds[i]);
             }
         }
+        if (r.json.meshes) {
+            this.meshes = new Array(r.json.meshes.length);
+        }
+        else
+            this.meshes = new Array(0);
         if (useMaterials) {
-            if (r.json.meshes) {
-                this.meshes = new Array(r.json.meshes.length);
-            }
-            else
-                this.meshes = new Array(0);
             if (r.json.samplers) {
                 this.samplers = new Array(r.json.samplers.length);
                 for (let i = 0, leni = this.samplers.length; i < leni; i++) {
@@ -120,7 +120,7 @@ export class GltfModel {
         if (useMaterials)
             vo.materialId = prim.material !== undefined ? prim.material : 0;
         else
-            vo.materialId = null;
+            vo.materialId = -1;
         Object.assign(vo.attributes, prim.attributes);
         let accId = 0;
         Object.keys(prim.attributes).forEach((key, index) => {
