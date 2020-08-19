@@ -3,19 +3,20 @@ import { Accessor, AccessorObject } from "../../js/geometry/VertexObjects.js";
 import { vec3, mat4 } from "../../../math/glmatrix/index.js";
 export declare class GltfModel {
     private r;
+    private useMaterials;
     bufferViews: GltfBufferView[];
     accessors: GltfAccessor[];
     nodes: GltfNode[];
     meshes: GltfMesh[];
     meshJson(id: any): any;
-    constructor(r: GltfResource);
-    getMesh(mesh: any, id: any, useMaterials: boolean): GltfMesh;
-    getMeshes(useMaterials: boolean): GltfMesh[];
+    constructor(r: GltfResource, useMaterials: boolean);
+    getMesh(mesh: any, id: any): GltfMesh;
+    getMeshes(): GltfMesh[];
     getScene(id: number): GltfScene;
     createVertexObject(prim: any, useMaterials: any): GltfVertexObject;
 }
 export declare class GltfVertexObject extends AccessorObject {
-    material: any;
+    materialId: number;
 }
 export declare class GltfMesh {
     name: string;

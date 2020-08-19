@@ -46,8 +46,8 @@ let main = function () {
     promGltf.then((res) => resourcesLoaded(res)).catch(error => alert(error.message));
 }();
 function resourcesLoaded(res) {
-    let model = new GltfModel(res);
-    let meshes = model.getMeshes(false);
+    let model = new GltfModel(res, false);
+    let meshes = model.getMeshes();
     if (meshes.length > 0)
         glMesh = createGlDrawable(model, meshes[0]);
     afterLoad();
@@ -64,7 +64,7 @@ function createGlDrawable(model, mesh) {
     glMesh.vos = mesh.vertexObjects;
     for (let j = 0, jlen = mesh.vertexObjects.length; j < jlen; j++) {
         let vo = mesh.vertexObjects[j];
-        let mat = vo.material;
+        let mat = vo.materialId;
         let layout = { POSITION: 0, NORMAL: 1, TEXCOORD_0: 2 };
         let vao = gl.createVertexArray();
         gl.bindVertexArray(vao);

@@ -47,7 +47,7 @@ let main = function () {
     promGltf.then((res) => resourcesLoaded(res)).catch(error => alert(error.message));
 }();
 function resourcesLoaded(res) {
-    let model = new GltfModel(res);
+    let model = new GltfModel(res, false);
     let scene = model.getScene(0);
     camera = new Camera(vec3.fromValues(0.0, 0.0, 10.0), vec3.fromValues(0.0, 1.0, 0.0));
     let cameras = scene.getCameraNodes();
@@ -91,7 +91,7 @@ class GlScene {
         let glMesh = new GlMesh();
         for (let j = 0, jlen = mesh.vertexObjects.length; j < jlen; j++) {
             let vo = mesh.vertexObjects[j];
-            let mat = vo.material;
+            let mat = vo.materialId;
             let layout = { POSITION: 0, NORMAL: 1, TEXCOORD_0: 2 };
             let vao = gl.createVertexArray();
             gl.bindVertexArray(vao);

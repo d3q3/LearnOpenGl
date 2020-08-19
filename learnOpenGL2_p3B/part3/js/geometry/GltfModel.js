@@ -4,8 +4,9 @@ export class GltfModel {
     meshJson(id) {
         return this.r.json.meshes[id];
     }
-    constructor(r) {
+    constructor(r, useMaterials) {
         this.r = r;
+        this.useMaterials = useMaterials;
         if (r.json.bufferViews) {
             let bfs = r.json.bufferViews;
             this.bufferViews = new Array(bfs.length);
@@ -36,7 +37,7 @@ export class GltfModel {
         else
             this.meshes = new Array(0);
     }
-    getMesh(mesh, id, useMaterials) {
+    getMesh(mesh, id) {
         if (this.meshes[id])
             return this.meshes[id];
         let m = new GltfMesh();
@@ -44,19 +45,19 @@ export class GltfModel {
         m.id = id;
         for (let i = 0, leni = mesh.primitives.length; i < leni; i++) {
             let prim = mesh.primitives[i];
-            let vo = this.createVertexObject(prim, useMaterials);
+            let vo = this.createVertexObject(prim, this.useMaterials);
             m.vertexObjects.push(vo);
         }
         this.meshes[id] = m;
         return m;
     }
-    getMeshes(useMaterials) {
-        if (useMaterials) {
+    getMeshes() {
+        if (this.useMaterials) {
         }
         if (this.r.json.meshes) {
             let mss = this.r.json.meshes;
             for (let i = 0, leni = mss.length; i < leni; i++) {
-                this.meshes[i] = this.getMesh(mss[i], i, useMaterials);
+                this.meshes[i] = this.getMesh(mss[i], i);
             }
         }
         return this.meshes;
@@ -75,9 +76,9 @@ export class GltfModel {
         let vo = new GltfVertexObject();
         vo.indexAccessor = this.accessors[ia];
         if (useMaterials)
-            vo.material = prim.material !== undefined ? prim.material : null;
+            vo.materialId = prim.material !== undefined ? prim.material : 0;
         else
-            vo.material = null;
+            vo.materialId = -1;
         Object.assign(vo.attributes, prim.attributes);
         let accId = 0;
         Object.keys(prim.attributes).forEach((key, index) => {
@@ -143,7 +144,7 @@ export class GltfNode {
         if (this.meshObject)
             return this.meshObject;
         if (this.meshId !== null)
-            return this.model.getMesh(this.model.meshJson(this.meshId), this.meshId, useMaterials);
+            return this.model.getMesh(this.model.meshJson(this.meshId), this.meshId);
         return null;
     }
     flatten(nodes) {
