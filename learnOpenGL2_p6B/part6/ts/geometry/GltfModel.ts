@@ -78,13 +78,14 @@ export class GltfModel {
             }
         }
 
+        if (r.json.meshes) {
+            this.meshes = new Array(r.json.meshes.length);
+        }
+        else this.meshes = new Array(0);
+
+
         //----------------------if use materials----------------------------//
         if (useMaterials) {
-            if (r.json.meshes) {
-                this.meshes = new Array(r.json.meshes.length);
-            }
-            else this.meshes = new Array(0);
-
             if (r.json.samplers) {
                 this.samplers = new Array(r.json.samplers.length);
                 for (let i = 0, leni = this.samplers.length; i < leni; i++) {
@@ -189,7 +190,7 @@ export class GltfModel {
 
         if (useMaterials)
             vo.materialId = prim.material !== undefined ? prim.material : 0;
-        else vo.materialId = null;
+        else vo.materialId = -1;
 
         Object.assign(vo.attributes, prim.attributes);
 
@@ -208,9 +209,11 @@ export class GltfModel {
 }
 
 /**
- * Temporarily in this file;
- * A GltfVertexObject does not own the vertices and indices. Instead the
+ * Temporarily(?) in this file;
+ * A GltfVertexObject does not contain the vertices and indices. Instead the
  * data are in our models BufferViews. The data can be accessed via the accessors.
+ * materialId=0: default material
+ * materialId=-1: no material
  */
 export class GltfVertexObject extends AccessorObject {
     materialId: number;
