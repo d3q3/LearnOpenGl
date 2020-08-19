@@ -76,7 +76,7 @@ let main = function () {
 }();
 
 function resourcesLoaded(res: GltfResource): void {
-    let model = new GltfModel(res);
+    let model = new GltfModel(res, false);
     let scene: GltfScene = model.getScene(0);
 
     camera = new Camera(vec3.fromValues(0.0, 0.0, 10.0), vec3.fromValues(0.0, 1.0, 0.0));
@@ -146,7 +146,7 @@ class GlScene {
         for (let j = 0, jlen = mesh.vertexObjects.length; j < jlen; j++) {
             let vo = mesh.vertexObjects[j];
 
-            let mat = vo.material;
+            let mat = vo.materialId;
             // get layout for material, for now default, material = null:
             let layout = { POSITION: 0, NORMAL: 1, TEXCOORD_0: 2 };
 

@@ -6,8 +6,12 @@ remove out-commented parts in programs.
 
 *
 harmonize code between the different parts  in /common subdirectories.
-	gltf: differences in use of material
-	vertexObjects: different versions --DONE
+	gltf: differences in use of material: 
+		GltfVertexObject in Part3 and 6 both use now materialId.
+		useMaterials in constructor GltfModel in Part3 and Part6
+		--DONE
+	vertexObjects: different versions in different Parts 
+		--DONE
 	except in part 1,2: always use vertexObjects instead of local cube/ sphere/ quad 
 
 *

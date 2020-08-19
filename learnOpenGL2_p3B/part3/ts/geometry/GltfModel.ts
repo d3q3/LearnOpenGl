@@ -12,6 +12,7 @@ import { vec3, vec4, mat4, quat } from "../../../math/glmatrix/index.js"
  */
 export class GltfModel {
     private r: GltfResource;
+    private useMaterials: boolean;
 
     bufferViews: GltfBufferView[];
     accessors: GltfAccessor[];
@@ -26,10 +27,13 @@ export class GltfModel {
      * creates the GltfModel with BufferViews and Accessors created.
      * Also Nodes are created, but without meshes: call getMesh()
      * Meshes is a cache for meshes and is initially empty.
+     * if useMaterials == true the materials will be loaded as well (see part6, ChGltf)
      * @param r GltfResource
+     * @param useMaterials boolean
      */
-    constructor(r: GltfResource) {
+    constructor(r: GltfResource, useMaterials: boolean) {
         this.r = r;
+        this.useMaterials = useMaterials;
 
         if (r.json.bufferViews) {
             let bfs = r.json.bufferViews;
@@ -69,7 +73,7 @@ export class GltfModel {
     * @param mesh json object of gltf mesh
     * @param useMaterials add material to glDrawable or not
     */
-    getMesh(mesh, id, useMaterials: boolean): GltfMesh {
+    getMesh(mesh, id): GltfMesh {
         if (this.meshes[id]) return this.meshes[id];
 
         let m: GltfMesh = new GltfMesh();
@@ -78,7 +82,7 @@ export class GltfModel {
 
         for (let i = 0, leni = mesh.primitives.length; i < leni; i++) {
             let prim = mesh.primitives[i];
-            let vo = this.createVertexObject(prim, useMaterials);
+            let vo = this.createVertexObject(prim, this.useMaterials);
             m.vertexObjects.push(vo);
         }
 
@@ -86,8 +90,8 @@ export class GltfModel {
         return m;
     }
 
-    getMeshes(useMaterials: boolean) {
-        if (useMaterials) {
+    getMeshes() {
+        if (this.useMaterials) {
             // first getMaterials()
         }
 
@@ -95,7 +99,7 @@ export class GltfModel {
             let mss = this.r.json.meshes;
 
             for (let i = 0, leni = mss.length; i < leni; i++) {
-                this.meshes[i] = this.getMesh(mss[i], i, useMaterials);//.push(this.createMesh(mss[i], i, useMaterials));
+                this.meshes[i] = this.getMesh(mss[i], i);//.push(this.createMesh(mss[i], i, useMaterials));
             }
 
         }
@@ -124,8 +128,8 @@ export class GltfModel {
         //vo.indices = new Uint16Array(this.bufferViews[vo.indexAccessor.bufferId].data);
 
         if (useMaterials)
-            vo.material = prim.material !== undefined ? prim.material : null;
-        else vo.material = null;
+            vo.materialId = prim.material !== undefined ? prim.material : 0;
+        else vo.materialId = -1;
 
         Object.assign(vo.attributes, prim.attributes);
 
@@ -144,12 +148,14 @@ export class GltfModel {
 }
 
 /**
- * Temporarily in this file;
+ * Temporarily(?) in this file;
  * A GltfVertexObject does not contain the vertices and indices. Instead the
  * data are in our models BufferViews. The data can be accessed via the accessors.
+ * materialId=0: default material
+ * materialId=-1: no material
  */
 export class GltfVertexObject extends AccessorObject {
-    material;
+    materialId: number;
 }
 
 /**
@@ -261,7 +267,7 @@ export class GltfNode {
     getMesh(useMaterials): GltfMesh {
         if (this.meshObject) return this.meshObject;
         if (this.meshId !== null)
-            return this.model.getMesh(this.model.meshJson(this.meshId), this.meshId, useMaterials);
+            return this.model.getMesh(this.model.meshJson(this.meshId), this.meshId);
         return null;
     }
 

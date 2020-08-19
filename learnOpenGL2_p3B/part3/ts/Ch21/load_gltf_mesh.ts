@@ -71,8 +71,8 @@ let main = function () {
 }();
 
 function resourcesLoaded(res: GltfResource): void {
-    let model = new GltfModel(res);
-    let meshes = model.getMeshes(false);
+    let model = new GltfModel(res, false);
+    let meshes = model.getMeshes();
     if (meshes.length > 0)
         glMesh = createGlDrawable(model, meshes[0]);
     afterLoad();
@@ -101,7 +101,7 @@ function createGlDrawable(model: GltfModel, mesh: GltfMesh) {
     for (let j = 0, jlen = mesh.vertexObjects.length; j < jlen; j++) {
         let vo = mesh.vertexObjects[j];
 
-        let mat = vo.material;
+        let mat = vo.materialId;
         // get layout for material, for now default, material = null:
         let layout = { POSITION: 0, NORMAL: 1, TEXCOORD_0: 2 };
 
