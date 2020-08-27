@@ -1,13 +1,14 @@
 import { vec3, vec4, mat4 } from '../../../math/glmatrix/index.js';
 import { fs_blending, vs_blending } from '../../js/Ch24/shaders/index.js'
-
 import { Shader } from '../../js/common/Shader.js'
 import { Mouse } from '../../js/common/Mouse.js'
 import { KeyInput } from '../../js/common/KeyInput.js';
 import { Camera, CameraMovement } from '../../js/common/Camera.js';
-
 import { VertexObject, Cube, Quad } from '../../js/geometry/VertexObjects.js'
 
+
+// This code is a javascript translation of code originally written by Joey de Vries under the CC BY-NC 4.0 licence. 
+// For more information please visit https://learnopengl.com/About
 
 const sizeFloat = 4;
 
