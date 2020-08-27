@@ -1,3 +1,6 @@
+// This code is a javascript translation of code originally written by Joey de Vries under the CC BY-NC 4.0 licence. 
+// For more information please visit https://learnopengl.com/About
+
 import { vs_texture, fs_texture } from "../../js/Ch7/shaders/index.js";
 import { Shader } from "../../js/common/Shader.js";
 const sizeFloat = 4;

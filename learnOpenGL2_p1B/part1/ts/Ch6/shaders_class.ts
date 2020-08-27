@@ -1,6 +1,10 @@
 import { vs_shader, fs_shader } from "../../js/Ch6/shaders/index.js"
 import { Shader } from "../../js/common/Shader.js";
 
+
+// This code is a javascript translation of code originally written by Joey de Vries under the CC BY-NC 4.0 licence. 
+// For more information please visit https://learnopengl.com/About
+
 // settings
 
 const sizeFloat = 4;

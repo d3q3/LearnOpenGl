@@ -1,3 +1,6 @@
+// This code is a javascript translation of code originally written by Joey de Vries under the CC BY-NC 4.0 licence. 
+// For more information please visit https://learnopengl.com/About
+
 const sizeFloat = 4;
 const vertexShaderSource = `#version 300 es 
 precision mediump float;
