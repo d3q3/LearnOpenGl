@@ -7,6 +7,9 @@ import { Mouse } from "../../js/common/Mouse.js";
 import { VertexObject, Accessor, Cube, Sphere2 } from "../../js/geometry/VertexObjects.js"
 
 
+// This code is a javascript translation of code originally written by Joey de Vries under the CC BY-NC 4.0. 
+// For more information please visit https://learnopengl.com/About
+
 // settings
 const sizeFloat = 4;
 //D3Q: the keyboard-keys the program reacts to; the keyInput gets queried
