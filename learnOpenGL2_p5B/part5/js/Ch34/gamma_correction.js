@@ -1,3 +1,7 @@
+// This code is a javascript translation of code originally written by Joey de Vries under the CC BY-NC 4.0 licence. 
+// For more information please visit https://learnopengl.com/About
+
+
 import { vec3, mat4 } from '../../../math/glmatrix/index.js';
 import { fs_gamma_correction, vs_gamma_correction } from '../../js/Ch34/shaders/index.js';
 import { Shader } from '../../js/common/Shader.js';

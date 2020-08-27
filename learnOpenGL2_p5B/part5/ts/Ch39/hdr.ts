@@ -6,7 +6,11 @@ import { Mouse } from '../../js/common/Mouse.js'
 import { KeyInput } from '../../js/common/KeyInput.js';
 import { Camera, CameraMovement } from '../../js/common/Camera.js';
 
-/**
+
+// This code is a javascript translation of code originally written by Joey de Vries under the CC BY-NC 4.0 licence. 
+// For more information please visit https://learnopengl.com/About
+
+// For more information please visit https://learnopengl.com/About/**
  * D3Q: javascript version of Ch39 program in LearnOpenGL
  * rewrite of hdr.cpp.
  *
