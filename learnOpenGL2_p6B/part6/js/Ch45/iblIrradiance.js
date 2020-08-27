@@ -1,3 +1,7 @@
+// This code is a javascript translation of code originally written by Joey de Vries under the CC BY-NC 4.0 licence. 
+// For more information please visit https://learnopengl.com/About
+
+
 import { vec3, mat4 } from '../../../math/glmatrix/index.js';
 import { vs_pbr, fs_pbr, vs_background, fs_background, vs_cubemap, fs_equirectangularToCubemap, fs_irradianceConvolution } from '../../js/Ch45/shaders/2/index.js';
 import { Shader } from '../../js/common/Shader.js';
