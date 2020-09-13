@@ -13,7 +13,7 @@ export class GlDrawModel {
         this.glDrawMeshes = new Array(drawModel.drawMeshes.length);
     }
 }
-export class GlDrawCubeMapObject {
+export class GlDrawCubeMapObject extends GlDrawObject {
 }
 export class GlManager {
     constructor(gl) {
@@ -22,36 +22,30 @@ export class GlManager {
         this.glVersion = gl.getParameter(gl.VERSION);
         this.glslVersion = gl.getParameter(gl.SHADING_LANGUAGE_VERSION);
     }
-    setTextureCount(count) {
-        this.glTextures = new Array(count);
-    }
-    setBufferCount(count) {
-        this.glBuffers = new Array(count);
-    }
-    createVao(drawObject, layout) {
+    createVao(glBuffers, drawObject, layout) {
         let gl = this.gl;
         let vao = gl.createVertexArray();
         gl.bindVertexArray(vao);
         let vas = drawObject.vas;
         let ib = vas.indexAccessor.bufferId;
-        if (!this.glBuffers[ib]) {
+        if (!glBuffers[ib]) {
             const ebo = gl.createBuffer();
             gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, ebo);
             gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, vas.buffers[ib], gl.STATIC_DRAW);
-            this.glBuffers[ib] = ebo;
+            glBuffers[ib] = ebo;
         }
-        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.glBuffers[ib]);
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, glBuffers[ib]);
         let acc;
         acc = vas.accessors[vas.attributes.POSITION];
-        this.createGlVertexBuffer(drawObject, acc);
-        gl.bindBuffer(gl.ARRAY_BUFFER, this.glBuffers[acc.bufferId]);
+        this.createGlVertexBuffer(glBuffers, drawObject, acc);
+        gl.bindBuffer(gl.ARRAY_BUFFER, glBuffers[acc.bufferId]);
         gl.vertexAttribPointer(layout.POSITION, acc.countComponent, gl.FLOAT, false, acc.stride, acc.byteOffset);
         gl.enableVertexAttribArray(layout.POSITION);
         if (layout.TEXCOORD_0 !== undefined) {
             if (vas.attributes.TEXCOORD_0 !== undefined) {
                 acc = vas.accessors[vas.attributes.TEXCOORD_0];
-                this.createGlVertexBuffer(drawObject, acc);
-                gl.bindBuffer(gl.ARRAY_BUFFER, this.glBuffers[acc.bufferId]);
+                this.createGlVertexBuffer(glBuffers, drawObject, acc);
+                gl.bindBuffer(gl.ARRAY_BUFFER, glBuffers[acc.bufferId]);
                 gl.vertexAttribPointer(layout.TEXCOORD_0, acc.countComponent, gl.FLOAT, false, acc.stride, acc.byteOffset);
                 gl.enableVertexAttribArray(layout.TEXCOORD_0);
             }
@@ -59,8 +53,8 @@ export class GlManager {
         if (layout.NORMAL !== undefined) {
             if (vas.attributes.NORMAL !== undefined) {
                 acc = vas.accessors[vas.attributes.NORMAL];
-                this.createGlVertexBuffer(drawObject, acc);
-                gl.bindBuffer(gl.ARRAY_BUFFER, this.glBuffers[acc.bufferId]);
+                this.createGlVertexBuffer(glBuffers, drawObject, acc);
+                gl.bindBuffer(gl.ARRAY_BUFFER, glBuffers[acc.bufferId]);
                 acc = vas.accessors[vas.attributes.NORMAL];
                 gl.vertexAttribPointer(layout.NORMAL, acc.countComponent, gl.FLOAT, false, acc.stride, acc.byteOffset);
                 gl.enableVertexAttribArray(layout.NORMAL);
@@ -68,50 +62,51 @@ export class GlManager {
         }
         return vao;
     }
-    createGlDrawObject(drawObject) {
+    createGlDrawModelObject(glDrawModel, drawObject) {
         let gl = this.gl;
         let glDrawObject = new GlDrawObject();
         let layout = drawObject.material.shaderLayout;
-        glDrawObject.vao = this.createVao(drawObject, layout);
+        glDrawObject.vao = this.createVao(glDrawModel.glBuffers, drawObject, layout);
         glDrawObject.indexAccessor = drawObject.vas.indexAccessor;
         if (drawObject.material) {
             glDrawObject.material = drawObject.material;
             if (glDrawObject.material instanceof TexturedMaterial) {
-                this.createGlTextures2D(glDrawObject.material.textures);
+                this.createGlTextures2D(glDrawModel.glTextures, glDrawObject.material.textures);
             }
         }
         else
             glDrawObject.material = null;
         return glDrawObject;
     }
-    createGlDrawMesh(drawMesh) {
+    createGlDrawModelMesh(glDrawModel, drawMesh) {
         let glDrawMesh = new GlDrawMesh(drawMesh);
         for (let i = 0; i < drawMesh.vertexObjects.length; i++) {
-            glDrawMesh.glDrawObjects[i] = this.createGlDrawObject(drawMesh.vertexObjects[i]);
+            glDrawMesh.glDrawObjects[i] =
+                this.createGlDrawModelObject(glDrawModel, drawMesh.vertexObjects[i]);
         }
         return glDrawMesh;
     }
-    createGlModel(drawModel) {
+    createGlDrawModel(drawModel) {
         let glDrawModel = new GlDrawModel(drawModel);
         for (let i = 0; i < drawModel.drawMeshes.length; i++) {
-            glDrawModel.glDrawMeshes[i] = this.createGlDrawMesh(drawModel.drawMeshes[i]);
+            glDrawModel.glDrawMeshes[i] = this.createGlDrawModelMesh(glDrawModel, drawModel.drawMeshes[i]);
         }
         return glDrawModel;
     }
-    createGlVertexBuffer(drawObject, acc) {
+    createGlVertexBuffer(glBuffers, drawObject, acc) {
         let gl = this.gl;
         let ib = acc.bufferId;
-        if (!this.glBuffers[ib]) {
+        if (!glBuffers[ib]) {
             let vbo = gl.createBuffer();
             gl.bindBuffer(gl.ARRAY_BUFFER, vbo);
             gl.bufferData(gl.ARRAY_BUFFER, drawObject.vas.buffers[ib], gl.STATIC_DRAW);
-            this.glBuffers[ib] = vbo;
+            glBuffers[ib] = vbo;
         }
     }
-    createGlTextures2D(textures) {
+    createGlTextures2D(glTextures, textures) {
         for (let i = 0; i < textures.length; i++) {
-            if (!this.glTextures[textures[i].id]) {
-                this.glTextures[textures[i].id] =
+            if (!glTextures[textures[i].id]) {
+                glTextures[textures[i].id] =
                     this.createGlTexture2D(this.gl, textures[i]);
             }
         }
@@ -119,9 +114,10 @@ export class GlManager {
     createGlCubeMap(drawCubemap) {
         let layout = { POSITION: 0 };
         let gl = this.gl;
-        let glDrawObject = new GlDrawObject();
-        glDrawObject.vao = this.createVao(drawCubemap, layout);
-        glDrawObject.indexAccessor = drawCubemap.vas.indexAccessor;
+        let glCubeMap = new GlDrawCubeMapObject();
+        let glBuffers = new Array(2);
+        glCubeMap.vao = this.createVao(glBuffers, drawCubemap, layout);
+        glCubeMap.indexAccessor = drawCubemap.vas.indexAccessor;
         let id = gl.createTexture();
         gl.bindTexture(this.gl.TEXTURE_CUBE_MAP, id);
         let material = drawCubemap.material;
@@ -140,7 +136,8 @@ export class GlManager {
         gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
         gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
         gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_WRAP_R, gl.CLAMP_TO_EDGE);
-        return glDrawObject;
+        glCubeMap.glTexture3D = id;
+        return glCubeMap;
     }
     createGlTexture2D(gl, texture, sampler, options) {
         let glTexture = gl.createTexture();

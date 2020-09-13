@@ -90,11 +90,11 @@ function resourcesLoaded(res: GltfResource): void {
     bottleModel.drawMeshes = bottleModel.getMeshes();
 
     glManager = new GlManager(gl);
-    glManager.setBufferCount(bottleModel.bufferCount);
-    glManager.setTextureCount(bottleModel.textureCount);
+    // glManager.setBufferCount(bottleModel.bufferCount);
+    // glManager.setTextureCount(bottleModel.textureCount);
     //    let attributes = { POSITION: 0, NORMAL: 2, TEXCOORD_0: 1 };
     //    glManager.setAttributeLayout(attributes);
-    glBottleModel = glManager.createGlModel(bottleModel);
+    glBottleModel = glManager.createGlDrawModel(bottleModel);
 
     //load the only mesh in this model
     // let drawMesh: DrawMesh = drawModel.drawMeshes[0];
@@ -162,11 +162,11 @@ function render() {
             if (glMesh.glDrawObjects[j].material.type = "gltf") {
                 let material: GltfMaterial = glMesh.glDrawObjects[j].material as GltfMaterial;
                 gl.activeTexture(gl.TEXTURE0 + TEXUNIT_ALBEDO);
-                gl.bindTexture(gl.TEXTURE_2D, glManager.glTextures[material.attributes.ALBEDO]);
+                gl.bindTexture(gl.TEXTURE_2D, glBottleModel.glTextures[material.attributes.ALBEDO]);
                 gl.activeTexture(gl.TEXTURE0 + TEXUNIT_NORMAL);
-                gl.bindTexture(gl.TEXTURE_2D, glManager.glTextures[material.attributes.NORMAL]);
+                gl.bindTexture(gl.TEXTURE_2D, glBottleModel.glTextures[material.attributes.NORMAL]);
                 gl.activeTexture(gl.TEXTURE0 + TEXUNIT_PBR);
-                gl.bindTexture(gl.TEXTURE_2D, glManager.glTextures[material.attributes.PBR]);
+                gl.bindTexture(gl.TEXTURE_2D, glBottleModel.glTextures[material.attributes.PBR]);
 
                 gl.bindVertexArray(glMesh.glDrawObjects[j].vao);
                 gl.drawElements(gl.TRIANGLES, glMesh.glDrawObjects[j].indexAccessor.countElements,

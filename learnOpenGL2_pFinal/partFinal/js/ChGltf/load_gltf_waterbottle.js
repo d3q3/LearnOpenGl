@@ -63,9 +63,7 @@ function resourcesLoaded(res) {
     bottleModel = new GltfModel(res, true);
     bottleModel.drawMeshes = bottleModel.getMeshes();
     glManager = new GlManager(gl);
-    glManager.setBufferCount(bottleModel.bufferCount);
-    glManager.setTextureCount(bottleModel.textureCount);
-    glBottleModel = glManager.createGlModel(bottleModel);
+    glBottleModel = glManager.createGlDrawModel(bottleModel);
     bottleShader = new Shader(gl, vs_pbr, fs_pbr);
     bottleShader.use(gl);
     bottleShader.setInt(gl, "albedoMap", TEXUNIT_ALBEDO);
@@ -101,11 +99,11 @@ function render() {
             if (glMesh.glDrawObjects[j].material.type = "gltf") {
                 let material = glMesh.glDrawObjects[j].material;
                 gl.activeTexture(gl.TEXTURE0 + TEXUNIT_ALBEDO);
-                gl.bindTexture(gl.TEXTURE_2D, glManager.glTextures[material.attributes.ALBEDO]);
+                gl.bindTexture(gl.TEXTURE_2D, glBottleModel.glTextures[material.attributes.ALBEDO]);
                 gl.activeTexture(gl.TEXTURE0 + TEXUNIT_NORMAL);
-                gl.bindTexture(gl.TEXTURE_2D, glManager.glTextures[material.attributes.NORMAL]);
+                gl.bindTexture(gl.TEXTURE_2D, glBottleModel.glTextures[material.attributes.NORMAL]);
                 gl.activeTexture(gl.TEXTURE0 + TEXUNIT_PBR);
-                gl.bindTexture(gl.TEXTURE_2D, glManager.glTextures[material.attributes.PBR]);
+                gl.bindTexture(gl.TEXTURE_2D, glBottleModel.glTextures[material.attributes.PBR]);
                 gl.bindVertexArray(glMesh.glDrawObjects[j].vao);
                 gl.drawElements(gl.TRIANGLES, glMesh.glDrawObjects[j].indexAccessor.countElements, gl.UNSIGNED_SHORT, glMesh.glDrawObjects[j].indexAccessor.byteOffset);
             }
