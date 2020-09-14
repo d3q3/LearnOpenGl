@@ -1,6 +1,6 @@
-import { vs_pbr, fs_pbr } from "../../js/ChGltf/shaders/1/index.js";
+import { vs_pbr, fs_pbr } from "../../js/ChGltf/shaders/4/index.js";
 import { vec3, mat4 } from "../../../math/glmatrix/index.js";
-import { Shader } from "../../js/material/Shader.js";
+import { PbrShader } from "../../js/gl/shaders/PbrShader.js";
 import { Camera, CameraMovement } from "../../js/common/Camera.js";
 import { KeyInput } from "../../js/common/KeyInput.js";
 import { Mouse } from "../../js/common/Mouse.js";
@@ -64,11 +64,8 @@ function resourcesLoaded(res) {
     bottleModel.drawMeshes = bottleModel.getMeshes();
     glManager = new GlManager(gl);
     glBottleModel = glManager.createGlDrawModel(bottleModel);
-    bottleShader = new Shader(gl, vs_pbr, fs_pbr);
+    bottleShader = new PbrShader(gl, vs_pbr, fs_pbr);
     bottleShader.use(gl);
-    bottleShader.setInt(gl, "albedoMap", TEXUNIT_ALBEDO);
-    bottleShader.setInt(gl, "normalMap", TEXUNIT_NORMAL);
-    bottleShader.setInt(gl, "occlusionMetallicRoughnessMap", TEXUNIT_PBR);
     afterLoad();
 }
 function afterLoad() {
@@ -96,14 +93,9 @@ function render() {
     for (let i = 0; i < glBottleModel.glDrawMeshes.length; i++) {
         let glMesh = glBottleModel.glDrawMeshes[i];
         for (let j = 0; j < glMesh.glDrawObjects.length; j++) {
-            if (glMesh.glDrawObjects[j].material.type = "gltf") {
+            if (glMesh.glDrawObjects[j].material.type = "pbr0") {
                 let material = glMesh.glDrawObjects[j].material;
-                gl.activeTexture(gl.TEXTURE0 + TEXUNIT_ALBEDO);
-                gl.bindTexture(gl.TEXTURE_2D, glBottleModel.glTextures[material.attributes.ALBEDO]);
-                gl.activeTexture(gl.TEXTURE0 + TEXUNIT_NORMAL);
-                gl.bindTexture(gl.TEXTURE_2D, glBottleModel.glTextures[material.attributes.NORMAL]);
-                gl.activeTexture(gl.TEXTURE0 + TEXUNIT_PBR);
-                gl.bindTexture(gl.TEXTURE_2D, glBottleModel.glTextures[material.attributes.PBR]);
+                bottleShader.setMaterial(gl, material, glBottleModel.glTextures);
                 gl.bindVertexArray(glMesh.glDrawObjects[j].vao);
                 gl.drawElements(gl.TRIANGLES, glMesh.glDrawObjects[j].indexAccessor.countElements, gl.UNSIGNED_SHORT, glMesh.glDrawObjects[j].indexAccessor.byteOffset);
             }

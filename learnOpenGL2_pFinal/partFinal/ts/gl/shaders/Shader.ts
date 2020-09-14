@@ -6,7 +6,7 @@ export class Shader {
      * D3Q: compiles shader code given source-code
      * types: for now only gl.VERTEX_SHADER or gl.FRAGMENT_SHADER
      */
-    private createShader = function (gl, source, type) {
+    createShader = function (gl, source, type) {
         var shader = gl.createShader(type);
         gl.shaderSource(shader, source);
         gl.compileShader(shader);

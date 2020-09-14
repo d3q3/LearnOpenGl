@@ -1,6 +1,9 @@
-import { vs_pbr, fs_pbr } from "../../js/ChGltf/shaders/1/index.js";
+import { vs_pbr, fs_pbr } from "../../js/ChGltf/shaders/4/index.js";
+
+
 import { vec3, mat4 } from "../../../math/glmatrix/index.js";
-import { Shader } from "../../js/material/Shader.js";
+import { PbrShader } from "../../js/gl/shaders/PbrShader.js";
+import { Shader } from "../../js/gl/shaders/Shader.js";
 import { Camera, CameraMovement } from "../../js/common/Camera.js";
 import { KeyInput } from "../../js/common/KeyInput.js";
 import { Mouse } from "../../js/common/Mouse.js";
@@ -33,7 +36,7 @@ let glBottleModel: GlDrawModel;
 
 let model: mat4 = mat4.create();
 
-let bottleShader: Shader;
+let bottleShader: PbrShader;
 
 let keyInput: KeyInput;
 let mouse: Mouse;
@@ -103,16 +106,15 @@ function resourcesLoaded(res: GltfResource): void {
     //set the glTextures found in the drawModel
     //    glManager.setModelTextures(drawModel);
 
-    bottleShader = new Shader(gl, vs_pbr, fs_pbr);
+    bottleShader = new PbrShader(gl, vs_pbr, fs_pbr);
     bottleShader.use(gl);
 
-    bottleShader.setInt(gl, "albedoMap", TEXUNIT_ALBEDO);
-    bottleShader.setInt(gl, "normalMap", TEXUNIT_NORMAL);
-    bottleShader.setInt(gl, "occlusionMetallicRoughnessMap", TEXUNIT_PBR);
+    // bottleShader.setInt(gl, "albedoMap", TEXUNIT_ALBEDO);
+    // bottleShader.setInt(gl, "normalMap", TEXUNIT_NORMAL);
+    // bottleShader.setInt(gl, "occlusionMetallicRoughnessMap", TEXUNIT_PBR);
 
     afterLoad();
 }
-
 
 function afterLoad() {
     // configure global opengl state
@@ -159,14 +161,16 @@ function render() {
         let glMesh = glBottleModel.glDrawMeshes[i];
         for (let j = 0; j < glMesh.glDrawObjects.length; j++) {
 
-            if (glMesh.glDrawObjects[j].material.type = "gltf") {
+            if (glMesh.glDrawObjects[j].material.type = "pbr0") {
                 let material: GltfMaterial = glMesh.glDrawObjects[j].material as GltfMaterial;
-                gl.activeTexture(gl.TEXTURE0 + TEXUNIT_ALBEDO);
-                gl.bindTexture(gl.TEXTURE_2D, glBottleModel.glTextures[material.attributes.ALBEDO]);
-                gl.activeTexture(gl.TEXTURE0 + TEXUNIT_NORMAL);
-                gl.bindTexture(gl.TEXTURE_2D, glBottleModel.glTextures[material.attributes.NORMAL]);
-                gl.activeTexture(gl.TEXTURE0 + TEXUNIT_PBR);
-                gl.bindTexture(gl.TEXTURE_2D, glBottleModel.glTextures[material.attributes.PBR]);
+                bottleShader.setMaterial(gl, material, glBottleModel.glTextures);
+
+                // gl.activeTexture(gl.TEXTURE0 + TEXUNIT_ALBEDO);
+                // gl.bindTexture(gl.TEXTURE_2D, glBottleModel.glTextures[material.attributes.ALBEDO]);
+                // gl.activeTexture(gl.TEXTURE0 + TEXUNIT_NORMAL);
+                // gl.bindTexture(gl.TEXTURE_2D, glBottleModel.glTextures[material.attributes.NORMAL]);
+                // gl.activeTexture(gl.TEXTURE0 + TEXUNIT_PBR);
+                // gl.bindTexture(gl.TEXTURE_2D, glBottleModel.glTextures[material.attributes.PBR]);
 
                 gl.bindVertexArray(glMesh.glDrawObjects[j].vao);
                 gl.drawElements(gl.TRIANGLES, glMesh.glDrawObjects[j].indexAccessor.countElements,
@@ -216,10 +220,10 @@ function mouseScrollCallback(yoffset: number) {
 }
 
 //D3Q: a few utility functions
-function setVec3vShader(shader: Shader, uniformName: string, value: vec3) {
+function setVec3vShader(shader: PbrShader, uniformName: string, value: vec3) {
     gl.uniform3fv(gl.getUniformLocation(shader.programId, uniformName), value);
 }
 
-function setMat4vShader(shader: Shader, uniformName: string, value: mat4) {
+function setMat4vShader(shader: PbrShader, uniformName: string, value: mat4) {
     gl.uniformMatrix4fv(gl.getUniformLocation(shader.programId, uniformName), false, value);
 }

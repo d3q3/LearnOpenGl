@@ -1,4 +1,4 @@
-import { TexturedMaterial, Texture } from "../../js/material/Material.js";
+import { Pbr0Material, Texture } from "../../js/material/Material.js";
 export class GltfTexture extends Texture {
     constructor(id, t, samplers, images) {
         super(id);
@@ -38,10 +38,10 @@ export class GltfTextureInfo {
 }
 export class GltfPbrMetallicRoughness {
     constructor(mat, json) {
-        this.baseColorFactor = json.baseColorFactor !== undefined ? json.baseColorFactor : [1, 1, 1, 1];
-        this.baseColorTexture = json.baseColorTexture !== undefined ? new GltfTextureInfo(mat, "ALBEDO", json.baseColorTexture) : null;
-        this.metallicFactor = json.metallicFactor !== undefined ? json.metallicFactor : 1;
-        this.roughnessFactor = json.roughnessFactor !== undefined ? json.roughnessFactor : 1;
+        mat.baseColorFactor = json.baseColorFactor !== undefined ? json.baseColorFactor : [1, 1, 1, 1];
+        this.baseColorTexture = json.baseColorTexture !== undefined ? new GltfTextureInfo(mat, "BASECOLOR", json.baseColorTexture) : null;
+        mat.metallicFactor = json.metallicFactor !== undefined ? json.metallicFactor : 1;
+        mat.roughnessFactor = json.roughnessFactor !== undefined ? json.roughnessFactor : 1;
         this.metallicRoughnessTexture = json.metallicRoughnessTexture !== undefined ? new GltfTextureInfo(mat, "PBR", json.metallicRoughnessTexture) : null;
         this.extensions = json.extensions !== undefined ? json.extensions : null;
         this.extras = json.extras !== undefined ? json.extras : null;
@@ -52,7 +52,7 @@ export class GltfNormalTextureInfo {
         this.index = json.index;
         mat.addTextureAttribute("NORMAL", this.index);
         this.texCoord = json.texCoord !== undefined ? json.texCoord : 0;
-        this.scale = json.scale !== undefined ? json.scale : 1;
+        mat.normalScale = json.scale !== undefined ? json.scale : 1;
         this.extensions = json.extensions !== undefined ? json.extensions : null;
         this.extras = json.extras !== undefined ? json.extras : null;
     }
@@ -63,13 +63,14 @@ export class GltfOcclusionTextureInfo {
         mat.addTextureAttribute("OCCLUSION", this.index);
         this.texCoord = json.texCoord !== undefined ? json.texCoord : 0;
         this.strength = json.strength !== undefined ? json.strength : 1;
+        mat.occlusionStrength = 1;
         this.extensions = json.extensions !== undefined ? json.extensions : null;
         this.extras = json.extras !== undefined ? json.extras : null;
     }
 }
-export class GltfMaterial extends TexturedMaterial {
+export class GltfMaterial extends Pbr0Material {
     constructor(textures, m, id) {
-        super("gltf", { POSITION: 0, NORMAL: 2, TEXCOORD_0: 1 });
+        super("pbr0", { POSITION: 0, NORMAL: 2, TEXCOORD_0: 1 });
         this.textures = textures;
         this.attributes = [];
         this.name = m.name !== undefined ? m.name : "material" + id;
@@ -79,7 +80,7 @@ export class GltfMaterial extends TexturedMaterial {
             new GltfPbrMetallicRoughness(this, {
                 baseColorFactor: [1, 1, 1, 1],
                 metallicFactor: 1,
-                metallicRoughnessTexture: 1
+                roughnessFactor: 1,
             });
         this.normalTexture = m.normalTexture !== undefined ? new GltfNormalTextureInfo(this, m.normalTexture) : null;
         this.occlusionTexture = m.occlusionTexture !== undefined ? new GltfOcclusionTextureInfo(this, m.occlusionTexture) : null;
@@ -90,9 +91,7 @@ export class GltfMaterial extends TexturedMaterial {
         this.doubleSided = m.doubleSided || false;
         this.extensions = m.extensions !== undefined ? m.extensions : null;
         this.extras = m.extras !== undefined ? m.extras : null;
-    }
-    addTextureAttribute(attr, id) {
-        this.attributes[attr] = id;
+        this.setMapCode();
     }
 }
 //# sourceMappingURL=GltfMaterial.js.map

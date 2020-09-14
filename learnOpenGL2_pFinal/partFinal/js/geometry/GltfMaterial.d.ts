@@ -1,4 +1,4 @@
-import { TexturedMaterial, Texture } from "../../js/material/Material.js";
+import { Pbr0Material, Texture } from "../../js/material/Material.js";
 export declare class GltfTexture extends Texture {
     name: any;
     sampler: GltfSampler;
@@ -25,10 +25,7 @@ export declare class GltfTextureInfo {
     constructor(mat: GltfMaterial, attr: any, json: any);
 }
 export declare class GltfPbrMetallicRoughness {
-    baseColorFactor: any;
     baseColorTexture: GltfTextureInfo;
-    metallicFactor: any;
-    roughnessFactor: any;
     metallicRoughnessTexture: GltfTextureInfo;
     extensions: any;
     extras: any;
@@ -37,7 +34,6 @@ export declare class GltfPbrMetallicRoughness {
 export declare class GltfNormalTextureInfo {
     index: any;
     texCoord: any;
-    scale: any;
     extensions: any;
     extras: any;
     constructor(mat: GltfMaterial, json: any);
@@ -50,19 +46,16 @@ export declare class GltfOcclusionTextureInfo {
     extras: any;
     constructor(mat: GltfMaterial, json: any);
 }
-export declare class GltfMaterial extends TexturedMaterial {
+export declare class GltfMaterial extends Pbr0Material {
     name: any;
     extensions: any;
     extras: any;
-    id: any;
     pbrMetallicRoughness: GltfPbrMetallicRoughness;
     normalTexture: GltfNormalTextureInfo;
     occlusionTexture: GltfOcclusionTextureInfo;
     emissiveTexture: GltfTextureInfo;
-    emissiveFactor: any;
     alphaMode: any;
     alphaCutoff: any;
     doubleSided: any;
     constructor(textures: any, m: any, id: any);
-    addTextureAttribute(attr: any, id: any): void;
 }

@@ -1,7 +1,7 @@
 /// <reference types="webgl2" />
 export declare class Shader {
     programId: number;
-    private createShader;
+    createShader: (gl: any, source: any, type: any) => any;
     constructor(gl: any, vertexCode: string, fragmentCode: string, geometryCode?: any);
     use(gl: any): void;
     setBoolean(gl: any, name: string, value: boolean): void;

@@ -190,10 +190,10 @@ void main()
         color = mix(color, color * ao, occlusionStrength);
     }
     
-    if ((mapCode & CUseEmissiveMap)>0) {
-        vec3 emissive = texture(emissiveMap, TexCoords).rgb * emissiveFactor;
-        color += emissive;
-    }
+    // if ((mapCode & CUseEmissiveMap)>0) {
+    //     vec3 emissive = texture(emissiveMap, TexCoords).rgb * emissiveFactor;
+    //     color += emissive;
+    // }
 
     // HDR tonemapping
     color = color / (color + vec3(1.0));

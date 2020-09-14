@@ -1,6 +1,14 @@
 import { Accessor } from "../../js/geometry/VertexObjects.js";
 import { DrawMesh, DrawObject, DrawModel, DrawCubeMap } from "../../js/geometry/Drawable.js";
 import { Material, Texture, TexturedMaterial, CubeMapMaterial } from "../../js/material/Material.js";
+import { Shaders } from "../../js/gl/shaders/Shaders.js";
+
+export class Shaders {
+
+    getShader(name: string) {
+
+    }
+}
 
 /**
  * D3Q: the GL-version of DrawObject
