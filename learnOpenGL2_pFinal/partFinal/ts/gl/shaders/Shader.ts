@@ -1,19 +1,11 @@
 export class Shader {
     // the gl id of the linked gl-program
     programId: number;
+    gl: WebGL2RenderingContext;
 
-    /**
-     * D3Q: compiles shader code given source-code
-     * types: for now only gl.VERTEX_SHADER or gl.FRAGMENT_SHADER
-     */
-    createShader = function (gl, source, type) {
-        var shader = gl.createShader(type);
-        gl.shaderSource(shader, source);
-        gl.compileShader(shader);
-        return shader;
-    }
 
     constructor(gl, vertexCode: string, fragmentCode: string, geometryCode?) {
+        this.gl = gl;
         var program = gl.createProgram();
         var vshader = this.createShader(gl, vertexCode, gl.VERTEX_SHADER);
         var fshader = this.createShader(gl, fragmentCode, gl.FRAGMENT_SHADER);
@@ -42,9 +34,20 @@ export class Shader {
         this.programId = program;
     };
 
+    /**
+    * D3Q: compiles shader code given source-code
+    * types: for now only gl.VERTEX_SHADER or gl.FRAGMENT_SHADER
+    */
+    createShader = function (gl, source, type) {
+        var shader = gl.createShader(type);
+        gl.shaderSource(shader, source);
+        gl.compileShader(shader);
+        return shader;
+    }
+
     // D3Q: set this shader in use
-    use(gl) {
-        gl.useProgram(this.programId);
+    use() {
+        this.gl.useProgram(this.programId);
     }
 
     // D3Q: functions to set uniforms

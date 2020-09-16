@@ -2,13 +2,8 @@ import { Accessor } from "../../js/geometry/VertexObjects.js";
 import { DrawMesh, DrawObject, DrawModel, DrawCubeMap } from "../../js/geometry/Drawable.js";
 import { Material, Texture, TexturedMaterial, CubeMapMaterial } from "../../js/material/Material.js";
 import { Shaders } from "../../js/gl/shaders/Shaders.js";
+import { Shader } from "../../js/gl/shaders/Shader.js";
 
-export class Shaders {
-
-    getShader(name: string) {
-
-    }
-}
 
 /**
  * D3Q: the GL-version of DrawObject
@@ -17,6 +12,8 @@ export class GlDrawObject {
     vao: WebGLVertexArrayObject;
     material: Material;
     indexAccessor: Accessor;
+    glTextures: WebGLTexture[];
+    shader: Shader;
 }
 
 /**
@@ -50,9 +47,7 @@ export class GlManager {
     glslVersion;
     EXT_color_buffer_float;
 
-    //attributeLayout: any;
-    // glTextures: WebGLTexture[];
-    // glBuffers: WebGLBuffer[];
+    shaders: Shaders;
 
     constructor(gl: WebGL2RenderingContext) {
         this.gl = gl;
@@ -61,7 +56,12 @@ export class GlManager {
         this.glVersion = gl.getParameter(gl.VERSION);
         this.glslVersion = gl.getParameter(gl.SHADING_LANGUAGE_VERSION);
 
+        this.shaders = new Shaders(gl);
         //this.attributeLayout = { POSITION: 0, TEXCOORD_0: 1, NORMAL: 2 };
+    }
+
+    getShader(type): Shader {
+        return this.shaders.getShader(type);
     }
 
     // setTextureCount(count: number) {
@@ -154,9 +154,11 @@ export class GlManager {
 
         if (drawObject.material) {
             glDrawObject.material = drawObject.material;
-            if (glDrawObject.material instanceof TexturedMaterial) {
-                this.createGlTextures2D(glDrawModel.glTextures, (glDrawObject.material as TexturedMaterial).textures);
+            if (drawObject.material instanceof TexturedMaterial) {
+                this.createGlTextures2D(glDrawModel.glTextures, (drawObject.material as TexturedMaterial).textures);
             }
+            glDrawObject.glTextures = glDrawModel.glTextures;
+            glDrawObject.shader = this.shaders.getShader(drawObject.material.type);
         }
         else glDrawObject.material = null; //error??
 

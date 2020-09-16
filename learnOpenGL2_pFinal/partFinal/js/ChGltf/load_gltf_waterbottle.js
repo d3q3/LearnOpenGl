@@ -1,6 +1,4 @@
-import { vs_pbr, fs_pbr } from "../../js/ChGltf/shaders/4/index.js";
 import { vec3, mat4 } from "../../../math/glmatrix/index.js";
-import { PbrShader } from "../../js/gl/shaders/PbrShader.js";
 import { Camera, CameraMovement } from "../../js/common/Camera.js";
 import { KeyInput } from "../../js/common/KeyInput.js";
 import { Mouse } from "../../js/common/Mouse.js";
@@ -15,10 +13,30 @@ let lastFrame = 0.0;
 let canvas;
 let gl;
 let glManager;
+let bottleShader;
+let model = mat4.create();
+class GlLightedModel {
+    constructor(glDrawModel) {
+        this.glDrawModel = glDrawModel;
+    }
+    drawModelObjects() {
+        for (let i = 0; i < this.glDrawModel.glDrawMeshes.length; i++) {
+            let glMesh = this.glDrawModel.glDrawMeshes[i];
+            for (let j = 0; j < glMesh.glDrawObjects.length; j++) {
+                let glObject = glMesh.glDrawObjects[j];
+                if (glObject.material.type = "pbr0") {
+                    let material = (glObject.material);
+                    let shader = (glObject.shader);
+                    shader.setMaterial(gl, material, this.glDrawModel.glTextures);
+                    gl.bindVertexArray(glMesh.glDrawObjects[j].vao);
+                    gl.drawElements(gl.TRIANGLES, glMesh.glDrawObjects[j].indexAccessor.countElements, gl.UNSIGNED_SHORT, glMesh.glDrawObjects[j].indexAccessor.byteOffset);
+                }
+            }
+        }
+    }
+}
 let bottleModel;
 let glBottleModel;
-let model = mat4.create();
-let bottleShader;
 let keyInput;
 let mouse;
 let lightPositions;
@@ -63,9 +81,9 @@ function resourcesLoaded(res) {
     bottleModel = new GltfModel(res, true);
     bottleModel.drawMeshes = bottleModel.getMeshes();
     glManager = new GlManager(gl);
-    glBottleModel = glManager.createGlDrawModel(bottleModel);
-    bottleShader = new PbrShader(gl, vs_pbr, fs_pbr);
-    bottleShader.use(gl);
+    glBottleModel = new GlLightedModel(glManager.createGlDrawModel(bottleModel));
+    bottleShader = glManager.getShader("pbr0");
+    bottleShader.use();
     afterLoad();
 }
 function afterLoad() {
@@ -79,28 +97,17 @@ function render() {
     processInput();
     gl.clearColor(0.3, 0.3, 0.3, 1.0);
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-    bottleShader.use(gl);
-    gl.uniform3fv(gl.getUniformLocation(bottleShader.programId, "lightPositions"), lightPositions);
-    gl.uniform3fv(gl.getUniformLocation(bottleShader.programId, "lightColors"), lightColors);
-    setVec3vShader(bottleShader, "camPos", camera.Position);
+    bottleShader.use();
+    bottleShader.setLights(lightPositions, lightColors);
+    bottleShader.setCameraPosition(camera.Position);
     let projection = mat4.create();
     mat4.perspective(projection, (camera.Zoom) * Math.PI / 180, canvas.width / canvas.height, 0.1, 100.0);
     let view = camera.GetViewMatrix();
-    setMat4vShader(bottleShader, "projection", projection);
-    setMat4vShader(bottleShader, "view", view);
+    bottleShader.setProjection(projection);
+    bottleShader.setView(view);
     mat4.rotateY(model, model, deltaTime / 1000);
-    setMat4vShader(bottleShader, "model", model);
-    for (let i = 0; i < glBottleModel.glDrawMeshes.length; i++) {
-        let glMesh = glBottleModel.glDrawMeshes[i];
-        for (let j = 0; j < glMesh.glDrawObjects.length; j++) {
-            if (glMesh.glDrawObjects[j].material.type = "pbr0") {
-                let material = glMesh.glDrawObjects[j].material;
-                bottleShader.setMaterial(gl, material, glBottleModel.glTextures);
-                gl.bindVertexArray(glMesh.glDrawObjects[j].vao);
-                gl.drawElements(gl.TRIANGLES, glMesh.glDrawObjects[j].indexAccessor.countElements, gl.UNSIGNED_SHORT, glMesh.glDrawObjects[j].indexAccessor.byteOffset);
-            }
-        }
-    }
+    bottleShader.setModel(model);
+    glBottleModel.drawModelObjects();
     requestAnimationFrame(render);
 }
 function processInput() {

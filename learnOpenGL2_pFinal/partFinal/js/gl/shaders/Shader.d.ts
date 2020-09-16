@@ -1,9 +1,10 @@
 /// <reference types="webgl2" />
 export declare class Shader {
     programId: number;
-    createShader: (gl: any, source: any, type: any) => any;
+    gl: WebGL2RenderingContext;
     constructor(gl: any, vertexCode: string, fragmentCode: string, geometryCode?: any);
-    use(gl: any): void;
+    createShader: (gl: any, source: any, type: any) => any;
+    use(): void;
     setBoolean(gl: any, name: string, value: boolean): void;
     setInt(gl: WebGL2RenderingContext, name: any, value: number): void;
     setFloat(gl: any, name: any, value: number): void;

@@ -1,4 +1,5 @@
 import { TexturedMaterial } from "../../js/material/Material.js";
+import { Shaders } from "../../js/gl/shaders/Shaders.js";
 export class GlDrawObject {
 }
 export class GlDrawMesh {
@@ -21,6 +22,10 @@ export class GlManager {
         this.EXT_color_buffer_float = gl.getExtension("EXT_color_buffer_float");
         this.glVersion = gl.getParameter(gl.VERSION);
         this.glslVersion = gl.getParameter(gl.SHADING_LANGUAGE_VERSION);
+        this.shaders = new Shaders(gl);
+    }
+    getShader(type) {
+        return this.shaders.getShader(type);
     }
     createVao(glBuffers, drawObject, layout) {
         let gl = this.gl;
@@ -70,9 +75,11 @@ export class GlManager {
         glDrawObject.indexAccessor = drawObject.vas.indexAccessor;
         if (drawObject.material) {
             glDrawObject.material = drawObject.material;
-            if (glDrawObject.material instanceof TexturedMaterial) {
-                this.createGlTextures2D(glDrawModel.glTextures, glDrawObject.material.textures);
+            if (drawObject.material instanceof TexturedMaterial) {
+                this.createGlTextures2D(glDrawModel.glTextures, drawObject.material.textures);
             }
+            glDrawObject.glTextures = glDrawModel.glTextures;
+            glDrawObject.shader = this.shaders.getShader(drawObject.material.type);
         }
         else
             glDrawObject.material = null;

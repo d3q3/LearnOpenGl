@@ -1,5 +1,9 @@
-import { Shader } from "../../../js/common/Shader.js";
-import { Pbr0Material } from "../../../js/material/Material.js"
+import { Shader } from "../../../js/gl/shaders/Shader.js";
+import { vec3, mat4 } from "../../../../math/glmatrix/index.js";
+import { Pbr0Material } from "../../../js/material/Material.js";
+import { vs_pbr, fs_pbr } from "../../../js/gl/shaders/pbr0/index.js";
+//"../../js/gl/shaders/pbr0/index.js";
+
 //import { GlMaterialModel, GlMaterialGltf } from "../../js/ChGltf/glMaterialManager.js";
 
 const TEXUNIT_BASECOLOR = 0, TEXUNIT_NORMAL = 1, TEXUNIT_METALLIC_ROUGHNESS = 2,
@@ -7,13 +11,14 @@ const TEXUNIT_BASECOLOR = 0, TEXUNIT_NORMAL = 1, TEXUNIT_METALLIC_ROUGHNESS = 2,
 
 export class PbrShader extends Shader {
     glUniforms: Object;
-    //    materialModel: GlMaterialModel;
     materialId: number;
 
-    constructor(gl, vertexCode, fragmentCode, geometryCode?) {
-        super(gl, vertexCode, fragmentCode, geometryCode);
+    constructor(gl) {
+        super(gl, vs_pbr, fs_pbr);
+        //super(gl, vs_pbr, fs_pbr, geometryCode);
 
         this.materialId = -1;
+        this.use();
 
         this.createGlUniforms(gl);
 
@@ -23,10 +28,6 @@ export class PbrShader extends Shader {
         this.setInt(gl, "occlusionMap", TEXUNIT_OCCLUSION);
         this.setInt(gl, "emissiveMap", TEXUNIT_EMISSIVE);
     }
-
-    // setMaterialModel(glMaterialModel: GlMaterialModel) {
-    //     this.materialModel = glMaterialModel;
-    // }
 
     setMaterial(gl: WebGL2RenderingContext, glMat: Pbr0Material, glTextures: WebGLTexture[]) {
         const
@@ -78,17 +79,40 @@ export class PbrShader extends Shader {
         gl.uniform3fv(us['emissiveFactor'], glMat.emissiveFactor);
     }
 
+    setLights(lightPositions: Float32Array, lightColors: Float32Array) {
+        this.gl.uniform3fv(this.glUniforms["lightPositions"], lightPositions);
+        this.gl.uniform3fv(this.glUniforms["lightColors"], lightColors);
+
+    }
+    setCameraPosition(position: vec3) {
+        this.gl.uniform3fv(this.glUniforms["cameraPosition"], position);
+    }
+    setProjection(projection: mat4) {
+        this.gl.uniformMatrix4fv(this.glUniforms["projection"], false, projection);
+    }
+    setView(view: mat4) {
+        this.gl.uniformMatrix4fv(this.glUniforms["view"], false, view);
+    }
+    setModel(model: mat4) {
+        this.gl.uniformMatrix4fv(this.glUniforms["model"], false, model);
+    }
+
     private createGlUniforms(gl) {
         this.glUniforms = new Object();
         var us = this.glUniforms;
         var program = this.programId;
 
-        this.use(gl);
+        this.use();
         us["mapCode"] = gl.getUniformLocation(program, 'mapCode');
 
         us["projection"] = gl.getUniformLocation(program, 'projection');
         us["view"] = gl.getUniformLocation(program, 'view');
         us["model"] = gl.getUniformLocation(program, 'model');
+
+        us["cameraPosition"] = gl.getUniformLocation(program, 'camPos');
+
+        us["lightColors"] = gl.getUniformLocation(program, 'lightColors');
+        us["lightPositions"] = gl.getUniformLocation(program, 'lightPositions');
 
         us["baseColorFactor"] = gl.getUniformLocation(program, 'baseColorFactor');
         us["baseColorMap"] = gl.getUniformLocation(program, 'baseColorMap');

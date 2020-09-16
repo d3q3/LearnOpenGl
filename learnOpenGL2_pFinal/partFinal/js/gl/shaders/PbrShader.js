@@ -1,9 +1,11 @@
-import { Shader } from "../../../js/common/Shader.js";
+import { Shader } from "../../../js/gl/shaders/Shader.js";
+import { vs_pbr, fs_pbr } from "../../../js/gl/shaders/pbr0/index.js";
 const TEXUNIT_BASECOLOR = 0, TEXUNIT_NORMAL = 1, TEXUNIT_METALLIC_ROUGHNESS = 2, TEXUNIT_OCCLUSION = 3, TEXUNIT_EMISSIVE = 4;
 export class PbrShader extends Shader {
-    constructor(gl, vertexCode, fragmentCode, geometryCode) {
-        super(gl, vertexCode, fragmentCode, geometryCode);
+    constructor(gl) {
+        super(gl, vs_pbr, fs_pbr);
         this.materialId = -1;
+        this.use();
         this.createGlUniforms(gl);
         this.setInt(gl, "baseColorMap", TEXUNIT_BASECOLOR);
         this.setInt(gl, "normalMap", TEXUNIT_NORMAL);
@@ -46,15 +48,34 @@ export class PbrShader extends Shader {
         gl.uniform1f(us['roughnessFactor'], glMat.roughnessFactor);
         gl.uniform3fv(us['emissiveFactor'], glMat.emissiveFactor);
     }
+    setLights(lightPositions, lightColors) {
+        this.gl.uniform3fv(this.glUniforms["lightPositions"], lightPositions);
+        this.gl.uniform3fv(this.glUniforms["lightColors"], lightColors);
+    }
+    setCameraPosition(position) {
+        this.gl.uniform3fv(this.glUniforms["cameraPosition"], position);
+    }
+    setProjection(projection) {
+        this.gl.uniformMatrix4fv(this.glUniforms["projection"], false, projection);
+    }
+    setView(view) {
+        this.gl.uniformMatrix4fv(this.glUniforms["view"], false, view);
+    }
+    setModel(model) {
+        this.gl.uniformMatrix4fv(this.glUniforms["model"], false, model);
+    }
     createGlUniforms(gl) {
         this.glUniforms = new Object();
         var us = this.glUniforms;
         var program = this.programId;
-        this.use(gl);
+        this.use();
         us["mapCode"] = gl.getUniformLocation(program, 'mapCode');
         us["projection"] = gl.getUniformLocation(program, 'projection');
         us["view"] = gl.getUniformLocation(program, 'view');
         us["model"] = gl.getUniformLocation(program, 'model');
+        us["cameraPosition"] = gl.getUniformLocation(program, 'camPos');
+        us["lightColors"] = gl.getUniformLocation(program, 'lightColors');
+        us["lightPositions"] = gl.getUniformLocation(program, 'lightPositions');
         us["baseColorFactor"] = gl.getUniformLocation(program, 'baseColorFactor');
         us["baseColorMap"] = gl.getUniformLocation(program, 'baseColorMap');
         us["normalMap"] = gl.getUniformLocation(program, 'normalMap');

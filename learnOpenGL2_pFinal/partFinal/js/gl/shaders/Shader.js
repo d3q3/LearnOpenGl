@@ -6,6 +6,7 @@ export class Shader {
             gl.compileShader(shader);
             return shader;
         };
+        this.gl = gl;
         var program = gl.createProgram();
         var vshader = this.createShader(gl, vertexCode, gl.VERTEX_SHADER);
         var fshader = this.createShader(gl, fragmentCode, gl.FRAGMENT_SHADER);
@@ -29,8 +30,8 @@ export class Shader {
         this.programId = program;
     }
     ;
-    use(gl) {
-        gl.useProgram(this.programId);
+    use() {
+        this.gl.useProgram(this.programId);
     }
     setBoolean(gl, name, value) {
         gl.uniform1i(gl.getUniformLocation(this.programId, name), value ? 1 : 0);
