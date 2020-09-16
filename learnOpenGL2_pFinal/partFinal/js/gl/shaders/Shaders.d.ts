@@ -4,5 +4,5 @@ export declare class Shaders {
     gl: WebGL2RenderingContext;
     shaders: any;
     constructor(gl: WebGL2RenderingContext);
-    getShader(type: any): Shader;
+    getShader(type: string): Shader;
 }

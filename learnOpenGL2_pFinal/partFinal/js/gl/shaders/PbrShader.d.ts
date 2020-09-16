@@ -6,6 +6,7 @@ export declare class PbrShader extends Shader {
     glUniforms: Object;
     materialId: number;
     constructor(gl: any);
+    private init;
     setMaterial(gl: WebGL2RenderingContext, glMat: Pbr0Material, glTextures: WebGLTexture[]): void;
     setLights(lightPositions: Float32Array, lightColors: Float32Array): void;
     setCameraPosition(position: vec3): void;

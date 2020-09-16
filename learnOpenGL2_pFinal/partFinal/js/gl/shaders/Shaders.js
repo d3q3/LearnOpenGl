@@ -5,8 +5,10 @@ export class Shaders {
         this.shaders = {};
     }
     getShader(type) {
-        if (this.shaders[type] == undefined)
-            this.shaders[type] = new PbrShader(this.gl);
+        if (this.shaders[type] == undefined) {
+            if (type == "pbr0")
+                this.shaders[type] = new PbrShader(this.gl);
+        }
         return this.shaders[type];
     }
 }

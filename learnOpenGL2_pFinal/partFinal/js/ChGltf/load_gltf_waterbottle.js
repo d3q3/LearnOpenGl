@@ -6,7 +6,6 @@ import { GltfLoader } from "../../js/geometry/GltfLoader.js";
 import { GltfModel } from "../geometry/GltfModel.js";
 import { GlManager } from "../../js/gl/GlDrawable.js";
 const GLFW_KEY_W = 'w', GLFW_KEY_S = 's', GLFW_KEY_A = 'a', GLFW_KEY_D = 'd', GLFW_KEY_SPACE = ' ';
-const TEXUNIT_ALBEDO = 0, TEXUNIT_NORMAL = 1, TEXUNIT_PBR = 2;
 let camera;
 let deltaTime = 0.0;
 let lastFrame = 0.0;
@@ -15,6 +14,8 @@ let gl;
 let glManager;
 let bottleShader;
 let model = mat4.create();
+let scale = 1.0;
+mat4.scale(model, model, [scale, scale, scale]);
 class GlLightedModel {
     constructor(glDrawModel) {
         this.glDrawModel = glDrawModel;
@@ -83,7 +84,6 @@ function resourcesLoaded(res) {
     glManager = new GlManager(gl);
     glBottleModel = new GlLightedModel(glManager.createGlDrawModel(bottleModel));
     bottleShader = glManager.getShader("pbr0");
-    bottleShader.use();
     afterLoad();
 }
 function afterLoad() {
@@ -134,11 +134,5 @@ function mouseMoveCallback(xoffset, yoffset, buttonID) {
 }
 function mouseScrollCallback(yoffset) {
     camera.ProcessMouseScroll(yoffset);
-}
-function setVec3vShader(shader, uniformName, value) {
-    gl.uniform3fv(gl.getUniformLocation(shader.programId, uniformName), value);
-}
-function setMat4vShader(shader, uniformName, value) {
-    gl.uniformMatrix4fv(gl.getUniformLocation(shader.programId, uniformName), false, value);
 }
 //# sourceMappingURL=load_gltf_waterbottle.js.map

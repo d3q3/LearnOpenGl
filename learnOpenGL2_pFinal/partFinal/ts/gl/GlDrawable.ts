@@ -4,7 +4,6 @@ import { Material, Texture, TexturedMaterial, CubeMapMaterial } from "../../js/m
 import { Shaders } from "../../js/gl/shaders/Shaders.js";
 import { Shader } from "../../js/gl/shaders/Shader.js";
 
-
 /**
  * D3Q: the GL-version of DrawObject
  */
@@ -57,31 +56,12 @@ export class GlManager {
         this.glslVersion = gl.getParameter(gl.SHADING_LANGUAGE_VERSION);
 
         this.shaders = new Shaders(gl);
-        //this.attributeLayout = { POSITION: 0, TEXCOORD_0: 1, NORMAL: 2 };
     }
 
     getShader(type): Shader {
         return this.shaders.getShader(type);
     }
 
-    // setTextureCount(count: number) {
-    //     //TODO delete old textures
-    //     this.glTextures = new Array(count);
-    // }
-
-    // setBufferCount(count: number) {
-    //     //TODO delete old textures
-    //     this.glBuffers = new Array(count);
-    // }
-
-    // setModelTextures(drawModel: DrawModel) {
-    //     this.setTextureCount(drawModel.textureCount);
-    //     for (let i = 0; i < drawModel.textureCount; i++) {
-    //         this.glTextures[i] = this.createGlTexture2D(this.gl, drawModel.getTexture(i), null);
-    //     }
-    // }
-
-    //setAttributeLayout(attributes) { this.attributeLayout = attributes };
 
     /**
      * D3Q: creates VertexArrayObject for a drawObject
@@ -179,8 +159,6 @@ export class GlManager {
         for (let i = 0; i < drawModel.drawMeshes.length; i++) {
             glDrawModel.glDrawMeshes[i] = this.createGlDrawModelMesh(glDrawModel, drawModel.drawMeshes[i]);
         }
-        //glDrawModel.glDrawMeshes[i] = this.createGlDrawMesh(drawModel.drawMeshes[i]);
-
         return glDrawModel;
     }
 
@@ -299,5 +277,3 @@ export class GlManager {
         return glTexture;
     };
 }
-
-

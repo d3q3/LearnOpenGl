@@ -2,9 +2,6 @@ import { Shader } from "../../../js/gl/shaders/Shader.js";
 import { vec3, mat4 } from "../../../../math/glmatrix/index.js";
 import { Pbr0Material } from "../../../js/material/Material.js";
 import { vs_pbr, fs_pbr } from "../../../js/gl/shaders/pbr0/index.js";
-//"../../js/gl/shaders/pbr0/index.js";
-
-//import { GlMaterialModel, GlMaterialGltf } from "../../js/ChGltf/glMaterialManager.js";
 
 const TEXUNIT_BASECOLOR = 0, TEXUNIT_NORMAL = 1, TEXUNIT_METALLIC_ROUGHNESS = 2,
     TEXUNIT_OCCLUSION = 3, TEXUNIT_EMISSIVE = 4;
@@ -15,12 +12,15 @@ export class PbrShader extends Shader {
 
     constructor(gl) {
         super(gl, vs_pbr, fs_pbr);
-        //super(gl, vs_pbr, fs_pbr, geometryCode);
 
         this.materialId = -1;
-        this.use();
 
+        this.init(gl);
         this.createGlUniforms(gl);
+    }
+
+    private init(gl) {
+        this.use();
 
         this.setInt(gl, "baseColorMap", TEXUNIT_BASECOLOR);
         this.setInt(gl, "normalMap", TEXUNIT_NORMAL);
@@ -41,14 +41,13 @@ export class PbrShader extends Shader {
         var us = this.glUniforms;
 
         if (glMat.id == this.materialId) return;
+
+        this.init(gl);
         this.materialId = glMat.id;
-        //let glTextures = this.materialModel.glTextures;
-        //let glMat = <GlMaterialGltf>this.materialModel.glMaterials[materialId];
         let mapCode: number = glMat.mapCode;
 
         if (mapCode & CUseBaseColorMap) {
             gl.activeTexture(gl.TEXTURE0 + TEXUNIT_BASECOLOR);
-            // gl.bindTexture(gl.TEXTURE_2D, glMat.textures[glMat.attributes.ALBEDO]);
             gl.bindTexture(gl.TEXTURE_2D, glTextures[glMat.attributes.BASECOLOR]);
         }
         if (mapCode & CUseNormalMap) {
@@ -78,6 +77,7 @@ export class PbrShader extends Shader {
         gl.uniform1f(us['roughnessFactor'], glMat.roughnessFactor);
         gl.uniform3fv(us['emissiveFactor'], glMat.emissiveFactor);
     }
+
 
     setLights(lightPositions: Float32Array, lightColors: Float32Array) {
         this.gl.uniform3fv(this.glUniforms["lightPositions"], lightPositions);

@@ -1,8 +1,6 @@
 import { Shader } from "../../../js/gl/shaders/Shader.js";
 import { PbrShader } from "../../../js/gl/shaders/PbrShader.js";
 
-import { Material } from "../../../js/material/Material.js";
-
 
 export class Shaders {
     gl: WebGL2RenderingContext;
@@ -14,7 +12,9 @@ export class Shaders {
     }
 
     getShader(type: string): Shader {
-        if (this.shaders[type] == undefined) this.shaders[type] = new PbrShader(this.gl);
+        if (this.shaders[type] == undefined) {
+            if (type == "pbr0") this.shaders[type] = new PbrShader(this.gl);
+        }
         return this.shaders[type];
     }
 }

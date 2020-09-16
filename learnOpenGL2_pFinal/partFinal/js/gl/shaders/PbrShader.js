@@ -5,8 +5,11 @@ export class PbrShader extends Shader {
     constructor(gl) {
         super(gl, vs_pbr, fs_pbr);
         this.materialId = -1;
-        this.use();
+        this.init(gl);
         this.createGlUniforms(gl);
+    }
+    init(gl) {
+        this.use();
         this.setInt(gl, "baseColorMap", TEXUNIT_BASECOLOR);
         this.setInt(gl, "normalMap", TEXUNIT_NORMAL);
         this.setInt(gl, "metallicRoughnessMap", TEXUNIT_METALLIC_ROUGHNESS);
@@ -18,6 +21,7 @@ export class PbrShader extends Shader {
         var us = this.glUniforms;
         if (glMat.id == this.materialId)
             return;
+        this.init(gl);
         this.materialId = glMat.id;
         let mapCode = glMat.mapCode;
         if (mapCode & CUseBaseColorMap) {

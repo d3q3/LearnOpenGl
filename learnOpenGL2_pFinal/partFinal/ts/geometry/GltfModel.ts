@@ -228,29 +228,6 @@ export class GltfModel extends DrawModel {
     }
 }
 
-// /**
-//  * Temporarily(?) in this file;
-//  * A GltfVertexObject does not contain the vertices and indices. Instead the
-//  * data are in our models BufferViews. The data can be accessed via the accessors.
-//  * materialId=0: default material
-//  * materialId=-1: no material
-//  */
-// export class DrawObject extends AccessorObject {
-//     materialId: number;
-// }
-
-// /**
-//  * created by model.getMesh()
-//  */
-// export class DrawMesh {
-//     name: string;
-//     id: number;
-
-//     vertexObjects: DrawObject[];
-//     constructor() {
-//         this.vertexObjects = [];
-//     }
-// }
 
 
 /**
