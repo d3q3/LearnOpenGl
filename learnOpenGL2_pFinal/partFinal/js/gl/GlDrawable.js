@@ -1,10 +1,12 @@
 import { TexturedMaterial } from "../../js/material/Material.js";
 import { Shaders } from "../../js/gl/shaders/Shaders.js";
+import { mat4 } from "../../../math/glmatrix/index.js";
 export class GlDrawObject {
 }
 export class GlDrawMesh {
     constructor(drawMesh) {
         this.glDrawObjects = new Array(drawMesh.vertexObjects.length);
+        this.ppMatrix = drawMesh.ppMatrix;
     }
 }
 export class GlDrawModel {
@@ -100,6 +102,29 @@ export class GlManager {
         }
         return glDrawModel;
     }
+    drawModelObjects(glDrawModel, model) {
+        let gl = this.gl;
+        let meshMatrix = mat4.create();
+        for (let i = 0; i < glDrawModel.glDrawMeshes.length; i++) {
+            let glMesh = glDrawModel.glDrawMeshes[i];
+            if (glMesh.ppMatrix) {
+                mat4.multiply(meshMatrix, model, glMesh.ppMatrix);
+            }
+            else
+                meshMatrix = mat4.clone(model);
+            for (let j = 0; j < glMesh.glDrawObjects.length; j++) {
+                let glObject = glMesh.glDrawObjects[j];
+                if (glObject.material.type = "pbr0") {
+                    let material = (glObject.material);
+                    let shader = (glObject.shader);
+                    shader.setMaterial(gl, material, glDrawModel.glTextures);
+                    shader.setModel(meshMatrix);
+                    gl.bindVertexArray(glMesh.glDrawObjects[j].vao);
+                    gl.drawElements(gl.TRIANGLES, glMesh.glDrawObjects[j].indexAccessor.countElements, gl.UNSIGNED_SHORT, glMesh.glDrawObjects[j].indexAccessor.byteOffset);
+                }
+            }
+        }
+    }
     createGlVertexBuffer(glBuffers, drawObject, acc) {
         let gl = this.gl;
         let ib = acc.bufferId;
@@ -125,6 +150,7 @@ export class GlManager {
         let glBuffers = new Array(2);
         glCubeMap.vao = this.createVao(glBuffers, drawCubemap, layout);
         glCubeMap.indexAccessor = drawCubemap.vas.indexAccessor;
+        glCubeMap.material = drawCubemap.material;
         let id = gl.createTexture();
         gl.bindTexture(this.gl.TEXTURE_CUBE_MAP, id);
         let material = drawCubemap.material;
@@ -143,8 +169,23 @@ export class GlManager {
         gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
         gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
         gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_WRAP_R, gl.CLAMP_TO_EDGE);
+        glCubeMap.shader = this.shaders.getShader(glCubeMap.material.type);
         glCubeMap.glTexture3D = id;
         return glCubeMap;
+    }
+    drawGlCubeMap(glCube) {
+        let gl = this.gl;
+        gl.depthFunc(gl.LEQUAL);
+        let glObject = glCube;
+        if (glObject.material.type = "env0") {
+            let material = (glObject.material);
+            let shader = (glObject.shader);
+            shader.use();
+            shader.setMaterial(gl, glCube.glTexture3D);
+            gl.bindVertexArray(glObject.vao);
+            gl.drawElements(gl.TRIANGLES, glObject.indexAccessor.countElements, gl.UNSIGNED_SHORT, glObject.indexAccessor.byteOffset);
+        }
+        gl.depthFunc(gl.LESS);
     }
     createGlTexture2D(gl, texture, sampler, options) {
         let glTexture = gl.createTexture();

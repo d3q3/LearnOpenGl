@@ -40,7 +40,6 @@ export class TexturedMaterial extends Material {
 
 export class CubeMapMaterial extends TexturedMaterial {
     bits: number;
-    //width: number; width/height in Texture
 
     constructor() {
         super("env0", { POSITION: 0 });

@@ -89,7 +89,9 @@ export class Cube extends VertexAccessors {
         const bytesFloat = 4;
         const bytesUint16Array = 2;
 
+
         super();
+        this.buffers = new Array(2);
         // stride: the length of a record is 8*bytesFloat = 32 bytes;
         // 3 floats for POSITION + 3 floats for NORMAL + 2 floats for TEXCOORD_0.
         let stride = 8 * bytesFloat;
@@ -175,6 +177,7 @@ export class Quad extends VertexAccessors {
         const bytesUint16Array = 2;
 
         super();
+        this.buffers = new Array(2);
         // stride: the length of a record is 8*bytesFloat = 32 bytes;
         // 3 floats for POSITION + 3 floats for NORMAL + 2 floats for TEXCOORD_0.
         let stride = 8 * bytesFloat;
@@ -221,6 +224,7 @@ export class Sphere extends VertexAccessors {
         const bytesFloat = 4;
 
         super();
+        this.buffers = new Array(2);
         // stride: the length of a record is 8*bytesFloat = 32 bytes;
         // 3 floats for POSITION + 3 floats for NORMAL + 2 floats for TEXCOORD_0.
         let stride = 8 * bytesFloat;

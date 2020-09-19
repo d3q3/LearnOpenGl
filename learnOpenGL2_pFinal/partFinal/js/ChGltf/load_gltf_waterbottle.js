@@ -14,28 +14,8 @@ let gl;
 let glManager;
 let bottleShader;
 let model = mat4.create();
-let scale = 1.0;
+let scale = 0.001;
 mat4.scale(model, model, [scale, scale, scale]);
-class GlLightedModel {
-    constructor(glDrawModel) {
-        this.glDrawModel = glDrawModel;
-    }
-    drawModelObjects() {
-        for (let i = 0; i < this.glDrawModel.glDrawMeshes.length; i++) {
-            let glMesh = this.glDrawModel.glDrawMeshes[i];
-            for (let j = 0; j < glMesh.glDrawObjects.length; j++) {
-                let glObject = glMesh.glDrawObjects[j];
-                if (glObject.material.type = "pbr0") {
-                    let material = (glObject.material);
-                    let shader = (glObject.shader);
-                    shader.setMaterial(gl, material, this.glDrawModel.glTextures);
-                    gl.bindVertexArray(glMesh.glDrawObjects[j].vao);
-                    gl.drawElements(gl.TRIANGLES, glMesh.glDrawObjects[j].indexAccessor.countElements, gl.UNSIGNED_SHORT, glMesh.glDrawObjects[j].indexAccessor.byteOffset);
-                }
-            }
-        }
-    }
-}
 let bottleModel;
 let glBottleModel;
 let keyInput;
@@ -73,16 +53,18 @@ let main = function () {
     mouse = new Mouse();
     mouse.moveCallback = mouseMoveCallback;
     mouse.scrollCallback = mouseScrollCallback;
-    let gltfUrl = "../../models/WaterBottle/glTF/WaterBottle.gltf";
+    let gltfUrl = "../../models/2CylinderEngine/glTF/2CylinderEngine.gltf";
     let gltfLoader = new GltfLoader();
     let promGltf = gltfLoader.load(gltfUrl);
     promGltf.then((res) => resourcesLoaded(res)).catch(error => alert(error.message));
 }();
 function resourcesLoaded(res) {
     bottleModel = new GltfModel(res, true);
+    let scene = bottleModel.getDrawScene(0);
     bottleModel.drawMeshes = bottleModel.getMeshes();
+    bottleModel.linkScene(scene);
     glManager = new GlManager(gl);
-    glBottleModel = new GlLightedModel(glManager.createGlDrawModel(bottleModel));
+    glBottleModel = glManager.createGlDrawModel(bottleModel);
     bottleShader = glManager.getShader("pbr0");
     afterLoad();
 }
@@ -107,7 +89,7 @@ function render() {
     bottleShader.setView(view);
     mat4.rotateY(model, model, deltaTime / 1000);
     bottleShader.setModel(model);
-    glBottleModel.drawModelObjects();
+    glManager.drawModelObjects(glBottleModel, model);
     requestAnimationFrame(render);
 }
 function processInput() {

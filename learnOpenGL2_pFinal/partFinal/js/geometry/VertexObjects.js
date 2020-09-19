@@ -20,6 +20,7 @@ export class Cube extends VertexAccessors {
         const bytesFloat = 4;
         const bytesUint16Array = 2;
         super();
+        this.buffers = new Array(2);
         let stride = 8 * bytesFloat;
         let vertices = new Float32Array([
             -1.0, -1.0, -1.0, 0.0, 0.0, -1.0, 0.0, 0.0,
@@ -83,6 +84,7 @@ export class Quad extends VertexAccessors {
         const bytesFloat = 4;
         const bytesUint16Array = 2;
         super();
+        this.buffers = new Array(2);
         let stride = 8 * bytesFloat;
         let vertices = new Float32Array([
             -1.0, -1.0, 1.0, 0.0, 0.0, -1.0, 0.0, 0.0,
@@ -111,6 +113,7 @@ export class Sphere extends VertexAccessors {
         const radius = 1.0;
         const bytesFloat = 4;
         super();
+        this.buffers = new Array(2);
         let stride = 8 * bytesFloat;
         let vertices = [];
         let indices = [];

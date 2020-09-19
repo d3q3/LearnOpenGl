@@ -1,5 +1,6 @@
 import { GltfResource } from "../../js/geometry/GltfLoader.js";
 import { Accessor, VertexAccessors } from "../../js/geometry/VertexObjects.js";
+import { DrawScene, DrawNode } from "../../js/geometry/Drawable.js";
 import { vec3, vec4, mat4, quat } from "../../../math/glmatrix/index.js";
 import { GltfTexture, GltfSampler, GltfMaterial } from "./GltfMaterial.js";
 import { DrawModel, DrawMesh, DrawObject } from "../../js/geometry/Drawable.js";
@@ -123,6 +124,28 @@ export class GltfModel extends DrawModel {
     }
 
     /**
+     * D3Q: introduced for Draw objecten
+     */
+    getDrawNodes(): DrawNode[] {
+        let drawNodes = new Array(this.nodes.length);
+        for (let i = 0; i < this.nodes.length; i++) {
+            let node: GltfNode = this.nodes[i];
+            drawNodes[i] = new DrawNode(drawNodes, node.childIds, node.matrix, node.meshId)
+        }
+        return drawNodes;
+    }
+
+    /**
+     * D3Q: introduced for Draw objecten
+     * @param id 
+     */
+    getDrawScene(id: number): DrawScene {
+        let gltfScene: GltfScene = this.getScene(id);
+        let drawNodes = this.getDrawNodes();
+        return new DrawScene(gltfScene.name, drawNodes, gltfScene.childIds);
+    }
+
+    /**
      * Create a GltfMaterial from a json description
      * @param material json object of gltf material 
      * @param id id of material in the gltf file
@@ -242,6 +265,7 @@ export class GltfNode {
     private model: GltfModel;
 
     children: GltfNode[];
+    childIds: number[];
 
     //D3Q: the cameras are created by GltfScene.getCameras()
     cameraId;
@@ -302,13 +326,16 @@ export class GltfNode {
 
     setChildren(node) {
         if (node.children) {
+            this.childIds = node.children;
             this.children = new Array(node.children.length);
             for (let i = 0, ilen = this.children.length; i < ilen; i++) {
                 this.children[i] = this.model.nodes[node.children[i]];
             }
         }
-        else
+        else {
+            this.childIds = [];
             this.children = [];
+        }
     }
 
     getMesh(useMaterials): DrawMesh {
@@ -378,6 +405,7 @@ export class GltfScene {
     name: string;
     // start nodes of the scene; nodes are already created in new GltfModel
     private children: GltfNode[];
+    childIds: number[];
     // nodes in flattened tree structure for all children
     private flatNodes: GltfNode[];
 
@@ -388,6 +416,7 @@ export class GltfScene {
      */
     constructor(model: GltfModel, sc) {
         this.name = (sc.name !== undefined) ? sc.name : null;
+        this.childIds = sc.nodes;
         let ilen = (sc.nodes) ? sc.nodes.length : 0;
         this.children = new Array(ilen);
 

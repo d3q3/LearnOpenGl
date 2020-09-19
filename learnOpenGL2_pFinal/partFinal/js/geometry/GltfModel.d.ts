@@ -1,5 +1,6 @@
 import { GltfResource } from "../../js/geometry/GltfLoader.js";
 import { Accessor } from "../../js/geometry/VertexObjects.js";
+import { DrawScene, DrawNode } from "../../js/geometry/Drawable.js";
 import { vec3, mat4 } from "../../../math/glmatrix/index.js";
 import { GltfTexture, GltfSampler, GltfMaterial } from "./GltfMaterial.js";
 import { DrawModel, DrawMesh, DrawObject } from "../../js/geometry/Drawable.js";
@@ -19,6 +20,8 @@ export declare class GltfModel extends DrawModel {
     materials: GltfMaterial[];
     meshJson(id: any): any;
     constructor(r: GltfResource, useMaterials: boolean);
+    getDrawNodes(): DrawNode[];
+    getDrawScene(id: number): DrawScene;
     private getMaterial;
     private getMaterials;
     getMesh(mesh: any, id: any): DrawMesh;
@@ -29,6 +32,7 @@ export declare class GltfModel extends DrawModel {
 export declare class GltfNode {
     private model;
     children: GltfNode[];
+    childIds: number[];
     cameraId: any;
     meshId: any;
     meshObject: DrawMesh;
@@ -54,6 +58,7 @@ export declare class GltfCamera {
 export declare class GltfScene {
     name: string;
     private children;
+    childIds: number[];
     private flatNodes;
     constructor(model: GltfModel, sc: any);
     updatePpMatrices(): void;

@@ -1,4 +1,5 @@
 import { Accessor, VertexAccessors } from "../../js/geometry/VertexObjects.js";
+import { DrawScene, DrawNode } from "../../js/geometry/Drawable.js";
 import { vec3, vec4, mat4, quat } from "../../../math/glmatrix/index.js";
 import { GltfTexture, GltfSampler, GltfMaterial } from "./GltfMaterial.js";
 import { DrawModel, DrawMesh, DrawObject } from "../../js/geometry/Drawable.js";
@@ -75,6 +76,19 @@ export class GltfModel extends DrawModel {
     }
     meshJson(id) {
         return this.r.json.meshes[id];
+    }
+    getDrawNodes() {
+        let drawNodes = new Array(this.nodes.length);
+        for (let i = 0; i < this.nodes.length; i++) {
+            let node = this.nodes[i];
+            drawNodes[i] = new DrawNode(drawNodes, node.childIds, node.matrix, node.meshId);
+        }
+        return drawNodes;
+    }
+    getDrawScene(id) {
+        let gltfScene = this.getScene(id);
+        let drawNodes = this.getDrawNodes();
+        return new DrawScene(gltfScene.name, drawNodes, gltfScene.childIds);
     }
     getMaterial(material, id) {
         if (!this.materials[id])
@@ -179,13 +193,16 @@ export class GltfNode {
     ;
     setChildren(node) {
         if (node.children) {
+            this.childIds = node.children;
             this.children = new Array(node.children.length);
             for (let i = 0, ilen = this.children.length; i < ilen; i++) {
                 this.children[i] = this.model.nodes[node.children[i]];
             }
         }
-        else
+        else {
+            this.childIds = [];
             this.children = [];
+        }
     }
     getMesh(useMaterials) {
         if (this.meshObject)
@@ -227,6 +244,7 @@ export class GltfCamera {
 export class GltfScene {
     constructor(model, sc) {
         this.name = (sc.name !== undefined) ? sc.name : null;
+        this.childIds = sc.nodes;
         let ilen = (sc.nodes) ? sc.nodes.length : 0;
         this.children = new Array(ilen);
         for (var i = 0; i < ilen; i++) {

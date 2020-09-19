@@ -1,0 +1,2 @@
+the Citadella is from: https://opengameart.org/content/%E2%80%9Chumus%E2%80%9D-skyboxes
+the skybox is from: http:/learnopengl.com/img/textures/skybox.rar

@@ -1,5 +1,4 @@
 import { vec3, mat4 } from "../../../math/glmatrix/index.js";
-import { PbrShader } from "../../js/gl/shaders/PbrShader.js";
 import { Camera, CameraMovement } from "../../js/common/Camera.js";
 import { KeyInput } from "../../js/common/KeyInput.js";
 import { Mouse } from "../../js/common/Mouse.js";
@@ -7,9 +6,9 @@ import { Mouse } from "../../js/common/Mouse.js";
 import { GltfLoader, GltfResource } from "../../js/geometry/GltfLoader.js";
 import { GltfModel } from "../geometry/GltfModel.js";
 import { GltfMaterial } from "../geometry/GltfMaterial.js";
-
-import { DrawModel } from "../../js/geometry/Drawable.js";
-import { GlManager, GlDrawObject, GlDrawModel } from "../../js/gl/GlDrawable.js";
+import { PbrShader } from "../../js/gl/shaders/Pbr0Shader.js";
+import { DrawModel, DrawScene } from "../../js/geometry/Drawable.js";
+import { GlManager, GlDrawModel } from "../../js/gl/GlDrawable.js";
 
 //D3Q: the keyboard-keys the program reacts to; the keyInput gets queried
 const GLFW_KEY_W = 'w', GLFW_KEY_S = 's', GLFW_KEY_A = 'a', GLFW_KEY_D = 'd',
@@ -26,37 +25,11 @@ let gl: WebGL2RenderingContext;
 let glManager: GlManager;
 let bottleShader: PbrShader;
 let model: mat4 = mat4.create();
-let scale = 1.0; //with model 2CylinderEngine: scale = 0.001
+let scale = 0.001; //with model 2CylinderEngine: scale = 0.001
 mat4.scale(model, model, [scale, scale, scale]);
 
-class GlLightedModel {
-    glDrawModel: GlDrawModel;
-
-    constructor(glDrawModel: GlDrawModel) {
-        this.glDrawModel = glDrawModel;
-    }
-
-    drawModelObjects() {
-        for (let i = 0; i < this.glDrawModel.glDrawMeshes.length; i++) {
-            let glMesh = this.glDrawModel.glDrawMeshes[i];
-            for (let j = 0; j < glMesh.glDrawObjects.length; j++) {
-                let glObject: GlDrawObject = glMesh.glDrawObjects[j];
-                if (glObject.material.type = "pbr0") {
-                    let material: GltfMaterial = (glObject.material) as GltfMaterial;
-                    let shader: PbrShader = (glObject.shader) as PbrShader;
-                    shader.setMaterial(gl, material, this.glDrawModel.glTextures);
-
-                    gl.bindVertexArray(glMesh.glDrawObjects[j].vao);
-                    gl.drawElements(gl.TRIANGLES, glMesh.glDrawObjects[j].indexAccessor.countElements,
-                        gl.UNSIGNED_SHORT, glMesh.glDrawObjects[j].indexAccessor.byteOffset);
-                }
-            }
-        }
-    }
-}
-
 let bottleModel: DrawModel;
-let glBottleModel: GlLightedModel;
+let glBottleModel: GlDrawModel;
 
 let keyInput: KeyInput;
 let mouse: Mouse;
@@ -66,7 +39,7 @@ let lightPositions: Float32Array;
 let lightColors: Float32Array;
 
 let main = function () {
-    // canvas creation and initializing OpenGL context 
+    // D3Q: canvas creation and initializing OpenGL rendering context 
     canvas = document.createElement('canvas');
     canvas.width = window.innerWidth; canvas.height = window.innerHeight;
     document.body.appendChild(canvas);
@@ -102,19 +75,24 @@ let main = function () {
     mouse.scrollCallback = mouseScrollCallback;
 
     // D3Q: load our mesh
-    //let gltfUrl = "../../models/2CylinderEngine/glTF/2CylinderEngine.gltf";
-    let gltfUrl = "../../models/WaterBottle/glTF/WaterBottle.gltf";
+    let gltfUrl = "../../models/2CylinderEngine/glTF/2CylinderEngine.gltf";
+    //let gltfUrl = "../../models/WaterBottle/glTF/WaterBottle.gltf";
     let gltfLoader = new GltfLoader();
     let promGltf = gltfLoader.load(gltfUrl);
     promGltf.then((res: GltfResource) => resourcesLoaded(res)).catch(error => alert(error.message));
 }();
 
 function resourcesLoaded(res: GltfResource): void {
+    // D3Q: create the data objects for the model(s)
     bottleModel = new GltfModel(res, true);
-    bottleModel.drawMeshes = bottleModel.getMeshes();
 
+    let scene: DrawScene = bottleModel.getDrawScene(0);
+    bottleModel.drawMeshes = bottleModel.getMeshes();
+    bottleModel.linkScene(scene);
+
+    // D3Q: now create the gl-objects for the model(s) using GlManager
     glManager = new GlManager(gl);
-    glBottleModel = new GlLightedModel(glManager.createGlDrawModel(bottleModel));
+    glBottleModel = glManager.createGlDrawModel(bottleModel);
     bottleShader = glManager.getShader("pbr0") as PbrShader;
 
     afterLoad();
@@ -137,7 +115,7 @@ function render() {
     gl.clearColor(0.3, 0.3, 0.3, 1.0);
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-    // D3Q: update the shaders used in the models
+    // D3Q: update the shaders used in the model(s)
     bottleShader.use();
 
     bottleShader.setLights(lightPositions, lightColors);
@@ -152,14 +130,12 @@ function render() {
     mat4.rotateY(model, model, deltaTime / 1000);
     bottleShader.setModel(model);
 
-
     // D3Q: render the model
-    glBottleModel.drawModelObjects();
+    glManager.drawModelObjects(glBottleModel, model);
     requestAnimationFrame(render);
 }
 
-// process all input: query GLFW whether relevant keys are pressed/released this frame and react accordingly
-// ---------------------------------------------------------------------------------------------------------
+// D3Q: query whether relevant keys are pressed
 function processInput() {
     const GLFW_PRESS = true; const GLFW_RELEASE = false;
     if (keyInput.isDown(GLFW_KEY_W) == GLFW_PRESS)
@@ -173,8 +149,7 @@ function processInput() {
 
 }
 
-// glfw: whenever the window size changed (by OS or user resize) this callback function executes
-// ---------------------------------------------------------------------------------------------
+// D3Q: frame callback: whenever the window size changed, this callback is called
 function framebufferSizeCallback(width: number, height: number) {
     // make sure the viewport matches the new window dimensions; note that width and 
     // height will be significantly larger than specified on retina displays.
@@ -183,7 +158,6 @@ function framebufferSizeCallback(width: number, height: number) {
     requestAnimationFrame(render);
 }
 
-// glfw: whenever the mouse moves, this callback is called
 // D3Q: mouse callback: whenever the mouse moves, this callback is called
 function mouseMoveCallback(xoffset: number, yoffset: number, buttonID: number) {
     if (buttonID == 1)
