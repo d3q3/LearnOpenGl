@@ -24,7 +24,9 @@
 </header>
 <h2 id="part-final-using-some-of-the-things-learned">Part Final, using some of the things learned</h2>
 <p>The following programs are implemented in javascript / typescript, using WebGl2. Not all browsers support WebGl2. The latest versions of Google Chrome and Windows Edge can be used to view the results.</p>
-<pre><code>In the program load_gltf_waterbottle.ts we once again load the gltf model WaterBottle.gltf. We&#39;ve done that before in Part 6. In the program load_environment.ts we create an environment from a cubemap. The theory can be found in Part 4, Chapter 27. And finally we have a program that combines the two, an environment + a gltf model (this time a two-cylindre engine).</code></pre>
+<blockquote>
+<p>In the program load_gltf_waterbottle.ts we once again load the gltf model WaterBottle.gltf. We've done that before in Part 6. In the program load_environment.ts we create an environment from a cubemap. The theory can be found in Part 4, Chapter 27. And finally we have a program that combines the two, an environment + a gltf model (this time a two-cylindre engine).</p>
+</blockquote>
 <p>The main idea behind this chapter is to restructure the code we used. We introduce a number of Draw_xxx classes that hold the information about the things we want to draw. Examples are DrawModel, DrawCubeMap and DrawObject. These classes are found in geometry/drawable.ts. A DrawObject has the vertex-data as welle as the material data.</p>
 <p>The classes are converted into clases that hold the information to draw them in a OpenGL context, using the class glManager (found in file /gl/glDrawable.ts). In the same subdirectory /gl/ is also the code to create shaders. A material is of a type (a material has a field <em>type</em>). A Shader corresponding to the type is created by glManager using Shaders.getShader(type). If we call Shaders.getShader a second time with the same value for <em>type</em> Shaders will return the same shader. In our examples there are only two shader classes, a Env0Shader (for drawing an environment) and a Pbr0Shader (for drawing a gltf model).</p>
 <h1 id="load_gltf_waterbottle.ts">load_gltf_waterbottle.ts</h1>
@@ -33,7 +35,7 @@
 <p><a href="./learnOpenGL2_pFinal/partFinal/js/ChGltf/load_gltf_waterbottle.html">load water bottle</a></p>
 <h1 id="load_environment.ts">load_environment.ts</h1>
 <p>The class ImageLoader is introduced that accepts a list of uris and returns the promise of a set of images. We are using a set of images that make it easy to see what happens to them when using cubemap textures (the textures are mapped on the outside of the cube; what is meant by the right or the left relative to the front can be seen looking at the colors).</p>
-<p><a href="./learnOpenGL2_pFinal/partFinal/js/ChGltf/environment.html">load environment</a></p>
+<p><a href="./learnOpenGL2_pFinal/partFinal/js/ChGltf/load_environment.html">load environment</a></p>
 <h1 id="load_combi.ts">load_combi.ts</h1>
 <p>Use is made op Promise.all()</p>
 <p><a href="./learnOpenGL2_pFinal/partFinal/js/ChGltf/load_combi.html">load combi</a></p>
