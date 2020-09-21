@@ -27,16 +27,16 @@ export class ImageLoader {
         var loader = this;
         this.initLoad();
 
-        return new Promise((resolve, reject) => {
+        return new Promise<HTMLImageElement[]>((resolve, reject) => {
             images = new Array(uris.length);
 
-            var loadImageCallback = function(img, iid) {
+            var loadImageCallback = function (img, iid) {
                 images[iid] = img;
                 loader.imagesLoaded++;
                 if (loader.complete()) resolve(images);
             };
 
-            var errorImageCallback = function(msg, iid) {
+            var errorImageCallback = function (msg, iid) {
                 console.log(msg);
                 loader.imagesLoaded++;
                 reject(msg);

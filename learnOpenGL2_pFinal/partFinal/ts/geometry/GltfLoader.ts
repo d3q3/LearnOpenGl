@@ -51,7 +51,7 @@ export class GltfLoader {
     }
 
     load(uri) {
-        return new Promise((resolve, reject) => {
+        return new Promise<GltfResource>((resolve, reject) => {
             this.initLoad();
             var loader = this;
             var gltfResource = new GltfResource();

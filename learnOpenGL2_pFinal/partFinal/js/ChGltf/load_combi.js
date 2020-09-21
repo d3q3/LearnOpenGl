@@ -2,9 +2,11 @@ import { vec3, mat4 } from "../../../math/glmatrix/index.js";
 import { Camera, CameraMovement } from "../../js/common/Camera.js";
 import { KeyInput } from "../../js/common/KeyInput.js";
 import { Mouse } from "../../js/common/Mouse.js";
+import { GltfLoader } from "../../js/geometry/GltfLoader.js";
+import { GltfModel } from "../geometry/GltfModel.js";
 import { ImageLoader } from "../../js/filing/imageLoader.js";
-import { DrawCubeMap } from "../../js/geometry/Drawable.js";
 import { GlManager } from "../../js/gl/GlDrawable.js";
+import { DrawCubeMap } from "../../js/geometry/Drawable.js";
 import { Texture, CubeMapMaterial } from "../../js/material/Material.js";
 const GLFW_KEY_W = 'w', GLFW_KEY_S = 's', GLFW_KEY_A = 'a', GLFW_KEY_D = 'd', GLFW_KEY_SPACE = ' ';
 let camera;
@@ -13,10 +15,18 @@ let lastFrame = 0.0;
 let canvas;
 let gl;
 let glManager;
-let glCubeMap;
+let bottleShader;
 let envShader;
+let model = mat4.create();
+let scale = 0.001;
+mat4.scale(model, model, [scale, scale, scale]);
+let bottleModel;
+let glBottleModel;
+let glCubeMap;
 let keyInput;
 let mouse;
+let lightPositions;
+let lightColors;
 let main = function () {
     canvas = document.createElement('canvas');
     canvas.width = window.innerWidth;
@@ -28,7 +38,19 @@ let main = function () {
         return;
     }
     window.onresize = () => { framebufferSizeCallback(window.innerWidth, window.innerHeight); };
-    camera = new Camera(vec3.fromValues(0.0, 0.0, 0.0), vec3.fromValues(0.0, 1.0, 0.0));
+    lightPositions = new Float32Array([
+        -10.0, 10.0, 10.0,
+        10.0, 10.0, 10.0,
+        -10.0, -10.0, 10.0,
+        10.0, -10.0, 10.0
+    ]);
+    lightColors = new Float32Array([
+        300.0, 300.0, 300.0,
+        300.0, 300.0, 300.0,
+        300.0, 300.0, 300.0,
+        300.0, 300.0, 300.0
+    ]);
+    camera = new Camera(vec3.fromValues(0.0, 0.0, 0.75), vec3.fromValues(0.0, 1.0, 0.0));
     keyInput = new KeyInput({
         GLFW_KEY_W, GLFW_KEY_S, GLFW_KEY_A, GLFW_KEY_D,
         GLFW_KEY_SPACE
@@ -36,12 +58,29 @@ let main = function () {
     mouse = new Mouse();
     mouse.moveCallback = mouseMoveCallback;
     mouse.scrollCallback = mouseScrollCallback;
-    let imageUrls = ["Right.png", "Left.png", "Top.png", "Bottom.png", "Back.png", "Front.png"];
+    let gltfUrl = "../../models/2CylinderEngine/glTF/2CylinderEngine.gltf";
+    let gltfLoader = new GltfLoader();
+    let imageUrls = ["posx.jpg", "negx.jpg", "posy.jpg", "negy.jpg", "posz.jpg", "negz.jpg"];
     let imageLoader = new ImageLoader("../../textures/environment/");
-    let promImages = imageLoader.load(imageUrls);
-    promImages.then((images) => resourcesLoaded(images)).catch(error => alert(error));
+    let combined = [gltfLoader.load(gltfUrl), imageLoader.load(imageUrls)];
+    Promise.all(combined).then((results) => {
+        let gltfResource = results[0];
+        resourceLoaded(gltfResource);
+        let imagesLoaded = results[1];
+        imageLoaded(imagesLoaded);
+        afterLoad();
+    }).catch(error => alert(error.message));
 }();
-function resourcesLoaded(sources) {
+function resourceLoaded(res) {
+    bottleModel = new GltfModel(res, true);
+    let scene = bottleModel.getDrawScene(0);
+    bottleModel.drawMeshes = bottleModel.getMeshes();
+    bottleModel.linkScene(scene);
+    glManager = new GlManager(gl);
+    glBottleModel = glManager.createGlDrawModel(bottleModel);
+    bottleShader = glManager.getShader("pbr0");
+}
+function imageLoaded(sources) {
     let textures = new Array(sources.length);
     for (let i = 0; i < sources.length; i++) {
         textures[i] = new Texture(i);
@@ -54,7 +93,6 @@ function resourcesLoaded(sources) {
     glManager = new GlManager(gl);
     glCubeMap = glManager.createGlCubeMap(new DrawCubeMap(cubeMaterial));
     envShader = glManager.getShader("env0");
-    afterLoad();
 }
 function afterLoad() {
     gl.enable(gl.DEPTH_TEST);
@@ -67,13 +105,20 @@ function render() {
     processInput();
     gl.clearColor(0.3, 0.3, 0.3, 1.0);
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-    envShader.use();
+    bottleShader.use();
+    bottleShader.setLights(lightPositions, lightColors);
+    bottleShader.setCameraPosition(camera.Position);
     let projection = mat4.create();
-    mat4.perspective(projection, 90 * Math.PI / 180, canvas.width / canvas.height, 0.1, 100.0);
+    mat4.perspective(projection, (camera.Zoom) * Math.PI / 180, canvas.width / canvas.height, 0.1, 100.0);
     let view = camera.GetViewMatrix();
+    bottleShader.setProjection(projection);
+    bottleShader.setView(view);
+    mat4.rotateY(model, model, deltaTime / 1000);
+    bottleShader.setModel(model);
+    envShader.use();
     envShader.setProjection(projection);
-    envShader.center(true);
     envShader.setView(view);
+    glManager.drawModelObjects(glBottleModel, model);
     glManager.drawGlCubeMap(glCubeMap);
     requestAnimationFrame(render);
 }
@@ -102,4 +147,4 @@ function mouseMoveCallback(xoffset, yoffset, buttonID) {
 function mouseScrollCallback(yoffset) {
     camera.ProcessMouseScroll(yoffset);
 }
-//# sourceMappingURL=load_environment.js.map
+//# sourceMappingURL=load_combi.js.map

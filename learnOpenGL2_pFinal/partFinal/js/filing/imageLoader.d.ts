@@ -8,5 +8,5 @@ export declare class ImageLoader {
     constructor(baseUrl: string);
     initLoad(): void;
     complete(): boolean;
-    load(uris: any): Promise<{}>;
+    load(uris: any): Promise<HTMLImageElement[]>;
 }

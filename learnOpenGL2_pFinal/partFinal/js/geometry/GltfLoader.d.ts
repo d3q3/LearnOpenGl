@@ -16,5 +16,5 @@ export declare class GltfLoader {
     buffersComplete(resource: GltfResource): boolean;
     imagesComplete(resource: GltfResource): boolean;
     complete(resource: GltfResource): boolean;
-    load(uri: any): Promise<{}>;
+    load(uri: any): Promise<GltfResource>;
 }
