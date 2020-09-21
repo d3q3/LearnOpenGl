@@ -25,7 +25,7 @@ let gl: WebGL2RenderingContext;
 let glManager: GlManager;
 let bottleShader: PbrShader;
 let model: mat4 = mat4.create();
-let scale = 0.001; //with model 2CylinderEngine: scale = 0.001
+let scale = 1.00; //with model 2CylinderEngine: scale = 0.001
 mat4.scale(model, model, [scale, scale, scale]);
 
 let bottleModel: DrawModel;
@@ -75,8 +75,8 @@ let main = function () {
     mouse.scrollCallback = mouseScrollCallback;
 
     // D3Q: load our mesh
-    let gltfUrl = "../../models/2CylinderEngine/glTF/2CylinderEngine.gltf";
-    //let gltfUrl = "../../models/WaterBottle/glTF/WaterBottle.gltf";
+    //let gltfUrl = "../../models/2CylinderEngine/glTF/2CylinderEngine.gltf";
+    let gltfUrl = "../../models/WaterBottle/glTF/WaterBottle.gltf";
     let gltfLoader = new GltfLoader();
     let promGltf = gltfLoader.load(gltfUrl);
     promGltf.then((res: GltfResource) => resourcesLoaded(res)).catch(error => alert(error.message));

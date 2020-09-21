@@ -14,7 +14,7 @@ let gl;
 let glManager;
 let bottleShader;
 let model = mat4.create();
-let scale = 0.001;
+let scale = 1.00;
 mat4.scale(model, model, [scale, scale, scale]);
 let bottleModel;
 let glBottleModel;
@@ -53,7 +53,7 @@ let main = function () {
     mouse = new Mouse();
     mouse.moveCallback = mouseMoveCallback;
     mouse.scrollCallback = mouseScrollCallback;
-    let gltfUrl = "../../models/2CylinderEngine/glTF/2CylinderEngine.gltf";
+    let gltfUrl = "../../models/WaterBottle/glTF/WaterBottle.gltf";
     let gltfLoader = new GltfLoader();
     let promGltf = gltfLoader.load(gltfUrl);
     promGltf.then((res) => resourcesLoaded(res)).catch(error => alert(error.message));
