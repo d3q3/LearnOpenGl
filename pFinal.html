@@ -32,12 +32,12 @@
 <h1 id="load_gltf_waterbottle.ts">load_gltf_waterbottle.ts</h1>
 <p>Depending on what is found in the Gltf file a Pbr0Material is made. Depending on the textures found the field <em>mapCode</em> gets its value. This value is passed to the Pbr0Shader. A Pbr0Shader has the method <em>setMaterial</em> that gives the uniforms of the shader a value.</p>
 <p>In the program we call Shaders.getShader first to get the shader and set the uniforms positions and colors. Pbr0Shader.setMaterial is called automatically by glManager.drawModelObjects(glDrawModel, model: mat4). We need to call setProjection and setView ourselves, as usual.</p>
-<p><a href="./learnOpenGL2_pFinal/partFinal/js/ChGltf/load_gltf_waterbottle.html">load water bottle</a></p>
+<p><a href="./learnOpenGL2_pFinal/partFinal/js/ChFinal/load_gltf_waterbottle.html">load water bottle</a></p>
 <h1 id="load_environment.ts">load_environment.ts</h1>
 <p>The class ImageLoader is introduced that accepts a list of uris and returns the promise of a set of images. We are using a set of images that make it easy to see what happens to them when using cubemap textures (the textures are mapped on the outside of the cube; what is meant by the right or the left relative to the front can be seen looking at the colors).</p>
-<p><a href="./learnOpenGL2_pFinal/partFinal/js/ChGltf/load_environment.html">load environment</a></p>
+<p><a href="./learnOpenGL2_pFinal/partFinal/js/ChFinal/load_environment.html">load environment</a></p>
 <h1 id="load_combi.ts">load_combi.ts</h1>
 <p>Use is made op Promise.all()</p>
-<p><a href="./learnOpenGL2_pFinal/partFinal/js/ChGltf/load_combi.html">load combi</a></p>
+<p><a href="./learnOpenGL2_pFinal/partFinal/js/ChFinal/load_combi.html">load combi</a></p>
 </body>
 </html>
